@@ -1,0 +1,2775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PawCare 🐾 – Smart Pet Care & Veterinary Website</title>
+  <!-- Google Fonts: Quicksand & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Chart.js for Pet Growth Tracker & Admin Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            peach: '#FFCBA4',
+            'peach-light': '#FFE4CE',
+            'peach-dark': '#F4B07E',
+            mint: '#C8E6D0',
+            'mint-light': '#E4F4E8',
+            'mint-dark': '#9FD0AC',
+            cream: '#FFFAF3',
+            'cream-card': '#FFFFFF',
+            softorange: '#FF9B71',
+            'softorange-hover': '#F28152',
+            darkbrown: '#49352E',
+            'darkbrown-muted': '#7A6259'
+          },
+          fontFamily: {
+            heading: ['Quicksand', 'sans-serif'],
+            body: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          borderRadius: {
+            'paw': '22px',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FFFAF3;
+      color: #49352E;
+      background-image: radial-gradient(#FFCBA4 1.2px, transparent 1.2px), radial-gradient(#C8E6D0 1.2px, #FFFAF3 1.2px);
+      background-size: 48px 48px;
+      background-position: 0 0, 24px 24px;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    /* Subtle Paw Print Watermark Pattern */
+    .paw-bg-pattern {
+      background-color: #FFF5EA;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFCBA4' fill-opacity='0.24' fill-rule='evenodd'%3E%3Ccircle cx='18' cy='18' r='3'/%3E%3Ccircle cx='26' cy='14' r='3'/%3E%3Ccircle cx='34' cy='18' r='3'/%3E%3Cellipse cx='26' cy='26' rx='6' ry='5'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* Smooth transitions & animations */
+    .card-hover {
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 34px -10px rgba(73, 53, 46, 0.12);
+    }
+
+    @keyframes pulse-sos {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.65); }
+      50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+    .sos-pulse {
+      animation: pulse-sos 2s infinite;
+    }
+
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .float-slow {
+      animation: float-gentle 4s ease-in-out infinite;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #FFFAF3; }
+    ::-webkit-scrollbar-thumb { background: #FFCBA4; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #FF9B71; }
+
+    .nav-pill.active {
+      background-color: #FFCBA4;
+      color: #49352E;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-peach selection:text-darkbrown">
+
+  <!-- ==================== STICKY TOP NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 bg-cream/95 backdrop-blur-md border-b border-peach/40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-2">
+        <!-- Brand Logo -->
+        <button onclick="navigateTo('home')" class="flex items-center gap-2.5 text-left group focus:outline-none shrink-0">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-peach to-softorange flex items-center justify-center text-white text-xl shadow-md group-hover:rotate-6 transition-transform">
+            <i class="fa-solid fa-paw"></i>
+          </div>
+          <div>
+            <span class="font-heading font-bold text-2xl tracking-tight text-darkbrown block leading-none">PawCare <span class="text-softorange">🐾</span></span>
+            <span class="text-[11px] font-medium text-darkbrown-muted tracking-wide">Smart Pet & Vet Hub</span>
+          </div>
+        </button>
+
+        <!-- Desktop Navigation Links -->
+        <nav id="desktop-nav" class="hidden xl:flex items-center gap-1 bg-white/80 px-2 py-1.5 rounded-full border border-peach/40 shadow-inner">
+          <button data-nav="home" onclick="navigateTo('home')" class="nav-pill active px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Home</button>
+          <button data-nav="services" onclick="navigateTo('services')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Services</button>
+          <button data-nav="appointments" onclick="navigateTo('appointments')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Book Visit</button>
+          <button data-nav="doctors" onclick="navigateTo('doctors')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Doctors</button>
+          <button data-nav="health" onclick="navigateTo('health')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Pet Health</button>
+          <button data-nav="adoption" onclick="navigateTo('adoption')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Adoption</button>
+          <button data-nav="shop" onclick="navigateTo('shop')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Shop</button>
+          <button data-nav="community" onclick="navigateTo('community')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Community</button>
+          <button data-nav="dashboard" onclick="navigateTo('dashboard')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-mint/60 transition flex items-center gap-1">
+            <i class="fa-solid fa-heart-pulse text-softorange"></i> My Pets
+          </button>
+          <button data-nav="admin" onclick="navigateTo('admin')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Admin</button>
+          <button data-nav="contact" onclick="navigateTo('contact')" class="nav-pill px-3.5 py-1.5 rounded-full text-sm font-medium text-darkbrown hover:bg-peach/40 transition">Contact</button>
+        </nav>
+
+        <!-- Right Action Controls: Cart, SOS, Mobile Menu -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <!-- Shopping Cart Button -->
+          <button onclick="toggleCartDrawer(true)" class="relative p-3 rounded-2xl bg-mint/60 hover:bg-mint text-darkbrown transition shadow-sm" aria-label="Shopping Cart">
+            <i class="fa-solid fa-bag-shopping text-lg"></i>
+            <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-softorange text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shadow">2</span>
+          </button>
+
+          <!-- Emergency SOS Button -->
+          <button onclick="openSOSModal()" class="sos-pulse flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-heading font-bold text-sm px-4 py-2.5 rounded-2xl shadow-md transition">
+            <i class="fa-solid fa-truck-medical"></i>
+            <span class="hidden sm:inline">Emergency SOS</span>
+            <span class="sm:hidden">SOS</span>
+          </button>
+
+          <!-- Mobile Hamburger -->
+          <button onclick="toggleMobileMenu()" class="xl:hidden p-3 rounded-2xl bg-peach/50 hover:bg-peach text-darkbrown transition" aria-label="Open Navigation">
+            <i class="fa-solid fa-bars text-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden xl:hidden bg-cream border-t border-peach/40 px-4 py-4 shadow-lg">
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <button onclick="navigateTo('home'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">🏠 Home</button>
+        <button onclick="navigateTo('services'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">🩺 Services (10)</button>
+        <button onclick="navigateTo('appointments'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">📅 Book Visit</button>
+        <button onclick="navigateTo('doctors'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">👩‍⚕️ Doctors & Trainers</button>
+        <button onclick="navigateTo('health'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">🥗 Pet Health & Food AI</button>
+        <button onclick="navigateTo('adoption'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">🐶 Adoption & Lost/Found</button>
+        <button onclick="navigateTo('shop'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">🛍️ Pet Shop</button>
+        <button onclick="navigateTo('community'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">💬 Pet Community</button>
+        <button onclick="navigateTo('dashboard'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-mint/50 hover:bg-mint font-bold text-sm">🐾 User Dashboard</button>
+        <button onclick="navigateTo('admin'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">⚙️ Admin Console</button>
+        <button onclick="navigateTo('contact'); toggleMobileMenu()" class="text-left px-4 py-2.5 rounded-xl bg-white hover:bg-peach/40 font-semibold text-sm">📞 Contact & Map</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== GLOBAL TOAST NOTIFICATION ==================== -->
+  <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ============================================================
+         VIEW 1: HOMEPAGE
+         ============================================================ -->
+    <section id="view-home" class="space-y-16">
+      <!-- HERO SECTION -->
+      <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-peach-light via-cream to-mint-light border-2 border-peach/50 p-6 sm:p-10 lg:p-14 shadow-xl">
+        <div class="grid lg:grid-cols-12 gap-10 items-center">
+          <!-- Hero Left Copy -->
+          <div class="lg:col-span-7 space-y-6 z-10">
+            <div class="inline-flex items-center gap-2 bg-white/90 border border-peach px-4 py-2 rounded-full shadow-sm">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+              <span class="text-xs sm:text-sm font-bold text-darkbrown">Trusted by 15,000+ Happy Pet Parents 🐾</span>
+            </div>
+
+            <h1 class="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl text-darkbrown leading-[1.12]">
+              Because Every Paw Deserves <span class="text-softorange underline decoration-mint decoration-8 underline-offset-4">Love & Care.</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-darkbrown-muted max-w-2xl leading-relaxed">
+              Your trusted digital home for happier, healthier, and safer pets. Book certified veterinarians, luxury spa grooming, AI nutrition guidance, adoption matches, and 24/7 emergency support in one warm place.
+            </p>
+
+            <!-- Hero CTAs -->
+            <div class="flex flex-wrap items-center gap-4 pt-1">
+              <button onclick="navigateTo('appointments')" class="px-7 py-4 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-base shadow-lg shadow-softorange/30 transition transform hover:-translate-y-0.5 flex items-center gap-2.5">
+                <i class="fa-solid fa-calendar-check"></i> Book an Appointment
+              </button>
+              <button onclick="navigateTo('services')" class="px-7 py-4 rounded-2xl bg-white hover:bg-mint-light text-darkbrown border-2 border-mint font-heading font-bold text-base shadow-sm transition flex items-center gap-2.5">
+                <i class="fa-solid fa-stethoscope text-softorange"></i> Explore Services
+              </button>
+            </div>
+
+            <!-- Live Service Search Bar -->
+            <div class="pt-3 max-w-xl">
+              <div class="relative flex items-center bg-white rounded-2xl p-2 border-2 border-peach/70 shadow-md focus-within:border-softorange transition">
+                <i class="fa-solid fa-magnifying-glass text-softorange ml-3 mr-2 text-lg"></i>
+                <input id="hero-service-search" type="text" oninput="handleHeroSearch(this.value)" placeholder="Search services (e.g. Vaccination, Grooming, Dental, Training...)" class="w-full bg-transparent text-sm sm:text-base text-darkbrown placeholder-darkbrown-muted/70 focus:outline-none py-2" />
+                <button onclick="navigateTo('services')" class="bg-peach hover:bg-peach-dark text-darkbrown font-bold text-sm px-4 py-2.5 rounded-xl transition shrink-0">
+                  Find
+                </button>
+              </div>
+              <div id="hero-search-results" class="hidden mt-2 bg-white rounded-2xl border border-peach shadow-xl p-3 space-y-2"></div>
+            </div>
+          </div>
+
+          <!-- Hero Right Visual Collage -->
+          <div class="lg:col-span-5 relative">
+            <div class="grid grid-cols-2 gap-4 items-center">
+              <div class="space-y-4">
+                <div class="rounded-[24px] overflow-hidden border-4 border-white shadow-lg aspect-[4/5] bg-peach/30">
+                  <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/400x500/FFCBA4/49352E?text=Happy+Golden+Pup'" alt="Happy Golden Retriever Puppy" class="w-full h-full object-cover" />
+                </div>
+                <div class="bg-white/95 backdrop-blur p-4 rounded-2xl border border-mint shadow-md flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-mint flex items-center justify-center text-darkbrown font-bold">
+                    <i class="fa-solid fa-shield-heart"></i>
+                  </div>
+                  <div>
+                    <p class="font-heading font-bold text-sm">24/7 Vet Care</p>
+                    <p class="text-xs text-darkbrown-muted">Instant SOS & Tele-Vet</p>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-4 pt-6">
+                <div class="bg-white/95 backdrop-blur p-4 rounded-2xl border border-peach shadow-md flex items-center gap-3 float-slow">
+                  <div class="w-10 h-10 rounded-xl bg-peach flex items-center justify-center text-darkbrown font-bold">
+                    <i class="fa-solid fa-star text-softorange"></i>
+                  </div>
+                  <div>
+                    <p class="font-heading font-bold text-sm">4.98 / 5 Rating</p>
+                    <p class="text-xs text-darkbrown-muted">3,400+ Verified Reviews</p>
+                  </div>
+                </div>
+                <div class="rounded-[24px] overflow-hidden border-4 border-white shadow-lg aspect-[4/5] bg-mint/30">
+                  <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=700&q=80" onerror="this.src='https://placehold.co/400x500/C8E6D0/49352E?text=Adorable+Kitten'" alt="Adorable Cat" class="w-full h-full object-cover" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK SMART ECOSYSTEM HIGHLIGHTS -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <button onclick="navigateTo('dashboard')" class="card-hover bg-white p-5 rounded-paw border border-peach/60 text-left flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-peach/60 flex items-center justify-center text-xl shrink-0">🩺</div>
+          <div>
+            <h3 class="font-heading font-bold text-base">Smart Health Profile</h3>
+            <p class="text-xs text-darkbrown-muted mt-1">Vaccines, allergies, growth charts & digital records.</p>
+          </div>
+        </button>
+        <button onclick="toggleAIChat(true)" class="card-hover bg-white p-5 rounded-paw border border-mint text-left flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-mint/70 flex items-center justify-center text-xl shrink-0">🤖</div>
+          <div>
+            <h3 class="font-heading font-bold text-base">AI Pet Assistant</h3>
+            <p class="text-xs text-darkbrown-muted mt-1">24/7 nutrition, grooming & symptom triage guidance.</p>
+          </div>
+        </button>
+        <button onclick="navigateTo('adoption')" class="card-hover bg-white p-5 rounded-paw border border-peach/60 text-left flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-softorange/20 flex items-center justify-center text-xl shrink-0">🏡</div>
+          <div>
+            <h3 class="font-heading font-bold text-base">Adoption & Lost/Found</h3>
+            <p class="text-xs text-darkbrown-muted mt-1">Find your forever friend or reunite missing pets.</p>
+          </div>
+        </button>
+        <button onclick="navigateTo('shop')" class="card-hover bg-white p-5 rounded-paw border border-mint text-left flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-mint/70 flex items-center justify-center text-xl shrink-0">🦴</div>
+          <div>
+            <h3 class="font-heading font-bold text-base">Organic Pet Boutique</h3>
+            <p class="text-xs text-darkbrown-muted mt-1">Vet-approved food, toys, beds & wellness supplies.</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- ABOUT PAWCARE SECTION -->
+      <div class="bg-white rounded-[28px] border border-peach/50 p-8 sm:p-10 shadow-sm grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-5">
+          <div class="rounded-[24px] overflow-hidden border-4 border-mint/60 shadow-md">
+            <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=800&q=80" onerror="this.src='https://placehold.co/600x450/C8E6D0/49352E?text=Compassionate+Vet+Care'" alt="Veterinarian examining a happy dog" class="w-full h-72 object-cover" />
+          </div>
+        </div>
+        <div class="lg:col-span-7 space-y-4">
+          <span class="inline-block px-3.5 py-1 rounded-full bg-mint/60 text-darkbrown font-bold text-xs uppercase tracking-wider">About PawCare 🐾</span>
+          <h2 class="font-heading font-bold text-3xl sm:text-4xl text-darkbrown">Fear-Free Veterinary Excellence Meets Modern Pet Wellness</h2>
+          <p class="text-darkbrown-muted leading-relaxed">
+            Founded by compassionate veterinarians and certified animal behaviorists, PawCare replaces stressful clinic visits with calming pastel spaces, gentle handling, and connected digital health tracking for dogs, cats, birds, rabbits, fish, and small companions.
+          </p>
+          <div class="grid grid-cols-3 gap-4 pt-2">
+            <div class="bg-cream p-4 rounded-2xl border border-peach/40 text-center">
+              <p class="font-heading font-bold text-2xl text-softorange">18+</p>
+              <p class="text-xs font-semibold text-darkbrown-muted">Certified Vets & Trainers</p>
+            </div>
+            <div class="bg-cream p-4 rounded-2xl border border-mint text-center">
+              <p class="font-heading font-bold text-2xl text-emerald-700">100%</p>
+              <p class="text-xs font-semibold text-darkbrown-muted">Fear-Free Certified</p>
+            </div>
+            <div class="bg-cream p-4 rounded-2xl border border-peach/40 text-center">
+              <p class="font-heading font-bold text-2xl text-softorange">24/7</p>
+              <p class="text-xs font-semibold text-darkbrown-muted">Emergency Response</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED SERVICES PREVIEW -->
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span class="inline-block px-3.5 py-1 rounded-full bg-peach/60 text-darkbrown font-bold text-xs uppercase tracking-wider">Tailored Care</span>
+            <h2 class="font-heading font-bold text-3xl text-darkbrown mt-2">Popular Pet Care Services</h2>
+          </div>
+          <button onclick="navigateTo('services')" class="px-5 py-2.5 rounded-2xl bg-peach/60 hover:bg-peach font-heading font-bold text-sm text-darkbrown transition">
+            View All 10 Services <i class="fa-solid fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+        <div id="home-featured-services" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
+
+      <!-- PET CATEGORIES INTERACTIVE EXPLORER -->
+      <div class="space-y-6">
+        <div class="text-center max-w-2xl mx-auto">
+          <span class="inline-block px-3.5 py-1 rounded-full bg-mint/70 text-darkbrown font-bold text-xs uppercase tracking-wider">Every Species Welcome</span>
+          <h2 class="font-heading font-bold text-3xl text-darkbrown mt-2">Specialized Care by Pet Category</h2>
+          <p class="text-sm text-darkbrown-muted mt-1">Select a companion category to view habitat, diet, lifespan, and tailored care guides.</p>
+        </div>
+        <!-- Category Pills -->
+        <div id="pet-category-tabs" class="flex flex-wrap justify-center gap-2.5"></div>
+        <!-- Active Category Showcase Card -->
+        <div id="pet-category-detail" class="bg-white rounded-[26px] border-2 border-mint p-6 sm:p-8 shadow-md"></div>
+      </div>
+
+      <!-- HAPPY PET STORIES & VERIFIED CUSTOMER REVIEWS -->
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="inline-block px-3.5 py-1 rounded-full bg-peach/60 text-darkbrown font-bold text-xs uppercase tracking-wider">Heartwarming Stories</span>
+            <h2 class="font-heading font-bold text-3xl text-darkbrown mt-2">Verified Pet Parent Reviews</h2>
+          </div>
+          <button onclick="openReviewModal()" class="px-5 py-3 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-sm shadow transition flex items-center gap-2">
+            <i class="fa-solid fa-pen-to-square"></i> Write a Verified Review
+          </button>
+        </div>
+        <div id="reviews-grid" class="grid md:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 2: ALL 10 PET CARE SERVICES
+         ============================================================ -->
+    <section id="view-services" class="hidden space-y-8">
+      <div class="bg-gradient-to-r from-peach-light to-mint-light rounded-[26px] p-8 border border-peach/60 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-white text-xs font-bold text-softorange uppercase">Complete Care Menu</span>
+          <h1 class="font-heading font-bold text-3xl sm:text-4xl text-darkbrown mt-2">Our 10 Specialized Pet Services</h1>
+          <p class="text-darkbrown-muted mt-1 max-w-xl">Transparent pricing, gentle fear-free specialists, and instant online slot reservation.</p>
+        </div>
+        <div class="w-full md:w-80">
+          <div class="relative">
+            <i class="fa-solid fa-search absolute left-4 top-3.5 text-darkbrown-muted"></i>
+            <input type="text" id="services-filter-input" oninput="renderAllServices()" placeholder="Filter services..." class="w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-peach focus:outline-none focus:border-softorange text-sm" />
+          </div>
+        </div>
+      </div>
+
+      <div id="all-services-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 3: ONLINE APPOINTMENT BOOKING (REAL SLOT AVAILABILITY)
+         ============================================================ -->
+    <section id="view-appointments" class="hidden space-y-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+          <span class="px-3.5 py-1 rounded-full bg-mint text-xs font-bold uppercase">Real-Time Scheduling</span>
+          <h1 class="font-heading font-bold text-3xl sm:text-4xl text-darkbrown mt-2">Book a Veterinary or Grooming Visit</h1>
+          <p class="text-darkbrown-muted mt-1">Live availability synced with our specialists—booked slots lock automatically.</p>
+        </div>
+
+        <div class="bg-white rounded-[28px] border-2 border-peach/60 p-6 sm:p-10 shadow-lg">
+          <form id="appointment-form" onsubmit="submitAppointment(event)" class="space-y-6">
+            <div class="grid sm:grid-cols-3 gap-5">
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Pet Type *</label>
+                <select id="apt-pet-type" required class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm font-medium">
+                  <option value="Dog">🐶 Dog</option>
+                  <option value="Cat">🐱 Cat</option>
+                  <option value="Bird">🦜 Bird</option>
+                  <option value="Rabbit">🐰 Rabbit</option>
+                  <option value="Fish">🐠 Fish</option>
+                  <option value="Hamster">🐹 Hamster</option>
+                  <option value="Other Small Pet">🦔 Other Small Pet</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Pet's Name *</label>
+                <input type="text" id="apt-pet-name" required placeholder="e.g., Bella" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Pet's Age *</label>
+                <input type="text" id="apt-pet-age" required placeholder="e.g., 2 years" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm" />
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Select Service *</label>
+                <select id="apt-service" required onchange="updateAvailableSlots()" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm font-medium"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Select Doctor or Trainer *</label>
+                <select id="apt-doctor" required onchange="updateAvailableSlots()" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm font-medium"></select>
+              </div>
+            </div>
+
+            <!-- Date & Dynamic Time Slots -->
+            <div class="bg-cream p-5 rounded-2xl border border-mint space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1">Appointment Date *</label>
+                  <input type="date" id="apt-date" required onchange="updateAvailableSlots()" class="px-4 py-2.5 rounded-xl bg-white border border-peach focus:outline-none focus:border-softorange text-sm font-semibold" />
+                </div>
+                <div class="flex items-center gap-4 text-xs font-semibold">
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-mint inline-block border border-emerald-600"></span> Available</span>
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-softorange inline-block"></span> Selected</span>
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-gray-300 inline-block"></span> Booked</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-2">Choose Available Time Slot *</label>
+                <div id="apt-slots-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+                <input type="hidden" id="apt-selected-slot" required />
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Owner Full Name *</label>
+                <input type="text" id="apt-owner-name" required placeholder="Your full name" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Contact Phone / Email *</label>
+                <input type="text" id="apt-owner-contact" required placeholder="+1 (555) 234-5678 or email" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1.5">Describe Pet's Symptoms or Notes</label>
+              <textarea id="apt-notes" rows="3" placeholder="Tell us about behavior, vaccination history, or specific grooming style..." class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach focus:outline-none focus:border-softorange text-sm"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-4 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-lg shadow-lg transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-check-circle"></i> Confirm Appointment & Generate Pass
+            </button>
+          </form>
+
+          <!-- Instant Digital Appointment Pass Confirmation -->
+          <div id="appointment-confirmation-card" class="hidden mt-8 bg-gradient-to-br from-mint-light to-cream border-2 border-emerald-400 rounded-[24px] p-6 sm:p-8 shadow-md">
+            <div class="flex items-center justify-between border-b border-emerald-300/60 pb-4 mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-2xl">
+                  <i class="fa-solid fa-ticket"></i>
+                </div>
+                <div>
+                  <span class="text-xs font-bold uppercase text-emerald-700">Confirmed Digital Pass</span>
+                  <h3 id="conf-booking-id" class="font-heading font-bold text-xl text-darkbrown">PAW-8492</h3>
+                </div>
+              </div>
+              <span class="px-3.5 py-1.5 rounded-full bg-emerald-500 text-white text-xs font-bold">Confirmed</span>
+            </div>
+            <div id="conf-details" class="grid sm:grid-cols-2 gap-3 text-sm"></div>
+            <div class="mt-5 flex flex-wrap gap-3">
+              <button onclick="navigateTo('dashboard')" class="px-5 py-2.5 rounded-xl bg-darkbrown text-white text-xs font-bold hover:opacity-90">View in My Dashboard</button>
+              <button onclick="document.getElementById('appointment-confirmation-card').classList.add('hidden')" class="px-5 py-2.5 rounded-xl bg-white border border-peach text-xs font-bold">Book Another Visit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 4: VETERINARIAN & TRAINER DIRECTORY
+         ============================================================ -->
+    <section id="view-doctors" class="hidden space-y-8">
+      <div class="bg-white rounded-[26px] border border-peach/60 p-6 sm:p-8 shadow-sm space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="px-3 py-1 rounded-full bg-peach/60 text-xs font-bold uppercase">Trusted Experts</span>
+            <h1 class="font-heading font-bold text-3xl text-darkbrown mt-2">Veterinarians & Certified Trainers</h1>
+          </div>
+        </div>
+        <!-- Filters -->
+        <div class="grid sm:grid-cols-3 gap-4 pt-2">
+          <div>
+            <label class="block text-xs font-bold text-darkbrown-muted mb-1">Specialization</label>
+            <select id="doc-filter-spec" onchange="renderDoctors()" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-medium">
+              <option value="all">All Specializations</option>
+              <option value="Small Animal Medicine">Small Animal Medicine</option>
+              <option value="Surgery & Dental">Surgery & Dental</option>
+              <option value="Avian & Exotics">Avian & Exotics</option>
+              <option value="Behavioral Training">Behavioral Training</option>
+              <option value="Pet Nutrition">Pet Nutrition</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-darkbrown-muted mb-1">Minimum Experience</label>
+            <select id="doc-filter-exp" onchange="renderDoctors()" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-medium">
+              <option value="0">Any Experience</option>
+              <option value="5">5+ Years</option>
+              <option value="8">8+ Years</option>
+              <option value="10">10+ Years</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-darkbrown-muted mb-1">Availability</label>
+            <select id="doc-filter-avail" onchange="renderDoctors()" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-medium">
+              <option value="all">All Schedules</option>
+              <option value="Available Today">Available Today</option>
+              <option value="Weekend">Weekend Shifts</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="doctors-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 5: PET HEALTH, FOOD RECOMMENDER & EDUCATIONAL ARTICLES
+         ============================================================ -->
+    <section id="view-health" class="hidden space-y-12">
+      <!-- Interactive Smart Pet Food Recommender -->
+      <div class="bg-gradient-to-br from-mint-light via-white to-peach-light rounded-[28px] border-2 border-mint p-6 sm:p-8 shadow-md">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-2xl bg-softorange text-white flex items-center justify-center text-2xl shadow">
+            <i class="fa-solid fa-bowl-food"></i>
+          </div>
+          <div>
+            <span class="text-xs font-bold uppercase text-emerald-800">Smart Nutrition Engine</span>
+            <h2 class="font-heading font-bold text-2xl sm:text-3xl text-darkbrown">Personalized Pet Food Recommender</h2>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+          <div>
+            <label class="block text-xs font-bold text-darkbrown-muted mb-1">Species</label>
+            <select id="food-species" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-peach text-sm font-semibold">
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Rabbit">Rabbit</option>
+              <option value="Bird">Bird</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-darkbrown-muted mb-1">Life Stage</label>
+            <select id="food-age" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-peach text-sm font-semibold">
+              <option value="Puppy/Kitten">Puppy / Kitten / Young</option>
+              <option value="Adult">Adult</option>
+              <option value="Senior">Senior (7+ yrs)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-darkbrown-muted mb-1">Breed Size</label>
+            <select id="food-size" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-peach text-sm font-semibold">
+              <option value="Small">Small (&lt; 10 kg)</option>
+              <option value="Medium">Medium (10–25 kg)</option>
+              <option value="Large">Large (25+ kg)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-darkbrown-muted mb-1">Dietary Preference / Allergy</label>
+            <select id="food-diet" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-peach text-sm font-semibold">
+              <option value="Balanced">Standard Balanced</option>
+              <option value="Grain-Free">Grain-Free / Sensitive Stomach</option>
+              <option value="Chicken-Free">Chicken Allergy (Salmon/Lamb)</option>
+              <option value="Weight-Control">Low-Calorie Weight Control</option>
+            </select>
+          </div>
+          <button onclick="generateFoodRecommendation()" class="w-full py-2.5 px-4 rounded-xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-sm shadow transition">
+            Get Meal Plan 🥗
+          </button>
+        </div>
+        <div id="food-recommendation-output" class="mt-6 bg-white rounded-2xl p-5 border border-peach/70"></div>
+      </div>
+
+      <!-- 9-Category Pet Health & Care Knowledge Library -->
+      <div class="space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="px-3 py-1 rounded-full bg-peach/60 text-xs font-bold uppercase">Vet-Reviewed Guides</span>
+            <h2 class="font-heading font-bold text-3xl text-darkbrown mt-2">Pet Health & Care Library</h2>
+          </div>
+          <div class="relative w-full md:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-darkbrown-muted"></i>
+            <input type="text" id="article-search" oninput="renderArticles()" placeholder="Search health tips, dental, senior..." class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white border border-peach text-sm focus:outline-none" />
+          </div>
+        </div>
+
+        <!-- 9 Category Filter Pills -->
+        <div id="article-category-pills" class="flex flex-wrap gap-2"></div>
+
+        <!-- Articles Grid -->
+        <div id="articles-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 6: PET ADOPTION CORNER & LOST/FOUND BOARD
+         ============================================================ -->
+    <section id="view-adoption" class="hidden space-y-12">
+      <!-- Sub-tabs for Adoption vs Lost & Found -->
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-5 rounded-[24px] border border-peach/60 shadow-sm">
+        <div>
+          <h1 class="font-heading font-bold text-3xl text-darkbrown">Adoption Corner & Lost/Found Rescue</h1>
+          <p class="text-sm text-darkbrown-muted">Give a rescued soul a loving home or help reunite lost pets with their families.</p>
+        </div>
+        <div class="flex gap-2 bg-cream p-1.5 rounded-2xl border border-peach">
+          <button id="tab-btn-adopt" onclick="switchRescueTab('adopt')" class="px-4 py-2 rounded-xl bg-peach font-bold text-sm text-darkbrown transition">🏡 Adopt a Pet</button>
+          <button id="tab-btn-lost" onclick="switchRescueTab('lost')" class="px-4 py-2 rounded-xl font-bold text-sm text-darkbrown-muted hover:text-darkbrown transition">🔍 Lost & Found Board</button>
+        </div>
+      </div>
+
+      <!-- ADOPTION GALLERY -->
+      <div id="rescue-adopt-panel" class="space-y-6">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterAdoptions('All')" class="adopt-filter-btn px-4 py-2 rounded-full bg-softorange text-white text-xs font-bold">All Pets</button>
+          <button onclick="filterAdoptions('Dog')" class="adopt-filter-btn px-4 py-2 rounded-full bg-white border border-peach text-xs font-bold">🐶 Dogs</button>
+          <button onclick="filterAdoptions('Cat')" class="adopt-filter-btn px-4 py-2 rounded-full bg-white border border-peach text-xs font-bold">🐱 Cats</button>
+          <button onclick="filterAdoptions('Rabbit')" class="adopt-filter-btn px-4 py-2 rounded-full bg-white border border-peach text-xs font-bold">🐰 Rabbits</button>
+          <button onclick="filterAdoptions('Bird')" class="adopt-filter-btn px-4 py-2 rounded-full bg-white border border-peach text-xs font-bold">🦜 Birds</button>
+        </div>
+        <div id="adoption-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+
+      <!-- LOST & FOUND PET BOARD -->
+      <div id="rescue-lost-panel" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h2 class="font-heading font-bold text-2xl text-darkbrown">Community Lost & Found Alerts</h2>
+          <button onclick="openLostFoundModal()" class="px-5 py-3 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-sm shadow transition">
+            <i class="fa-solid fa-bullhorn mr-1.5"></i> Post Lost / Found Pet Alert
+          </button>
+        </div>
+        <div id="lost-found-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 7: PET PRODUCTS & SHOPPING STORE
+         ============================================================ -->
+    <section id="view-shop" class="hidden space-y-8">
+      <div class="bg-gradient-to-r from-peach-light to-mint-light rounded-[26px] p-6 sm:p-8 border border-peach/60 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-white text-xs font-bold text-softorange uppercase">PawCare Boutique</span>
+          <h1 class="font-heading font-bold text-3xl text-darkbrown mt-2">Vet-Approved Pet Essentials</h1>
+          <p class="text-sm text-darkbrown-muted mt-1">Nutritious food, enrichment toys, orthopedic beds, grooming care, and wellness supplies.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <input type="text" id="shop-search" oninput="renderShopProducts()" placeholder="Search products..." class="px-4 py-2.5 rounded-2xl bg-white border border-peach text-sm focus:outline-none" />
+          <select id="shop-sort" onchange="renderShopProducts()" class="px-4 py-2.5 rounded-2xl bg-white border border-peach text-sm font-semibold">
+            <option value="featured">Sort: Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Shop Categories -->
+      <div id="shop-category-bar" class="flex flex-wrap gap-2"></div>
+
+      <!-- Products Grid -->
+      <div id="shop-products-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 8: PET COMMUNITY FEED
+         ============================================================ -->
+    <section id="view-community" class="hidden space-y-8 max-w-4xl mx-auto">
+      <div class="bg-white rounded-[26px] border border-peach/60 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-peach flex items-center justify-center text-xl">🐾</div>
+          <div>
+            <h1 class="font-heading font-bold text-2xl text-darkbrown">PawCare Pet Parents Community</h1>
+            <p class="text-xs text-darkbrown-muted">Share milestones, adorable photos, training wins, and ask fellow pet lovers!</p>
+          </div>
+        </div>
+        <form onsubmit="createCommunityPost(event)" class="space-y-3 pt-2">
+          <div class="grid sm:grid-cols-2 gap-3">
+            <input type="text" id="post-author" required placeholder="Your Name & Pet (e.g., Maya & Mochi)" class="px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+            <select id="post-tag" class="px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-semibold">
+              <option value="Cute Moment 📸">Cute Moment 📸</option>
+              <option value="Care Tip 💡">Care Tip 💡</option>
+              <option value="Question ❓">Question ❓</option>
+              <option value="Training Win 🏆">Training Win 🏆</option>
+            </select>
+          </div>
+          <textarea id="post-content" required rows="2" placeholder="Share a story, tip, or question with the PawCare family..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm"></textarea>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <select id="post-photo-preset" class="px-3.5 py-2 rounded-xl bg-cream border border-mint text-xs font-semibold">
+              <option value="">No Photo Attachment</option>
+              <option value="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=700&q=80">Attach: Happy Beagle Smile</option>
+              <option value="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=700&q=80">Attach: Cozy Tabby Cat</option>
+              <option value="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=700&q=80">Attach: Fluffy Bunny</option>
+            </select>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-sm shadow transition">
+              Share Post <i class="fa-solid fa-paper-plane ml-1"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div id="community-feed-list" class="space-y-6"></div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 9: SMART USER DASHBOARD (ALL PET WELLNESS TOOLS)
+         ============================================================ -->
+    <section id="view-dashboard" class="hidden space-y-8">
+      <!-- Top Pet Selector & Quick Notifications Banner -->
+      <div class="bg-gradient-to-r from-peach-light via-cream to-mint-light rounded-[28px] border-2 border-peach/60 p-6 sm:p-8 shadow-md">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div>
+            <span class="px-3 py-1 rounded-full bg-white text-xs font-bold text-softorange uppercase">Smart Pet Health Hub</span>
+            <h1 class="font-heading font-bold text-3xl text-darkbrown mt-2">Welcome Back, Pet Parent! 🐾</h1>
+            <p class="text-sm text-darkbrown-muted">Manage smart profiles, vaccine reminders, growth charts, medical vault, grooming & daily activity.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <select id="dashboard-pet-selector" onchange="selectActivePet(this.value)" class="px-4 py-3 rounded-2xl bg-white border-2 border-softorange font-heading font-bold text-sm text-darkbrown shadow-sm"></select>
+            <button onclick="openAddPetModal()" class="px-4 py-3 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-sm shadow transition">
+              <i class="fa-solid fa-plus mr-1"></i> Add Pet Profile
+            </button>
+          </div>
+        </div>
+
+        <!-- Smart Notifications Strip -->
+        <div id="dashboard-notifications" class="mt-6 grid sm:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- Active Pet Smart Health Profile Card -->
+      <div id="active-pet-profile-card" class="bg-white rounded-[26px] border border-peach/60 p-6 sm:p-8 shadow-sm"></div>
+
+      <!-- Dashboard Modules Grid -->
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Module A: Pet Growth Tracker & Interactive Chart -->
+        <div class="bg-white rounded-[26px] border border-mint p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-xl text-darkbrown">📈 Pet Growth Tracker</h3>
+              <p class="text-xs text-darkbrown-muted">Weight (kg) & development over time</p>
+            </div>
+            <form onsubmit="logPetGrowth(event)" class="flex items-center gap-2">
+              <input type="number" step="0.1" id="growth-weight-input" required placeholder="Weight (kg)" class="w-28 px-3 py-1.5 rounded-xl bg-cream border border-peach text-xs font-bold" />
+              <button type="submit" class="px-3 py-1.5 rounded-xl bg-mint hover:bg-mint-dark text-darkbrown text-xs font-bold">+ Log</button>
+            </form>
+          </div>
+          <div class="h-56">
+            <canvas id="growthChartCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Module B: Daily Pet Activity & Hydration Tracker -->
+        <div class="bg-white rounded-[26px] border border-peach/60 p-6 shadow-sm space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-xl text-darkbrown">🏃 Daily Wellness & Activity Tracker</h3>
+              <p class="text-xs text-darkbrown-muted">Track walks, play, sleep & hydration goals</p>
+            </div>
+            <button onclick="resetDailyActivity()" class="text-xs font-bold text-softorange hover:underline">Reset Today</button>
+          </div>
+          <div id="activity-tracker-bars" class="space-y-4"></div>
+        </div>
+
+        <!-- Module C: Vaccination & Deworming Reminder Engine -->
+        <div class="bg-white rounded-[26px] border border-peach/60 p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-heading font-bold text-xl text-darkbrown">💉 Vaccination & Deworming Reminders</h3>
+            <button onclick="addVaccineReminderPrompt()" class="px-3 py-1.5 rounded-xl bg-peach/70 hover:bg-peach text-xs font-bold">+ Add Reminder</button>
+          </div>
+          <div id="vaccine-reminders-list" class="space-y-3"></div>
+        </div>
+
+        <!-- Module D: Recurring Pet Grooming Scheduler -->
+        <div class="bg-white rounded-[26px] border border-mint p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-heading font-bold text-xl text-darkbrown">✂️ Recurring Grooming Scheduler</h3>
+            <span class="px-2.5 py-1 rounded-full bg-mint/60 text-xs font-bold">Auto-Reminder On</span>
+          </div>
+          <form onsubmit="scheduleRecurringGrooming(event)" class="grid grid-cols-3 gap-2">
+            <select id="groom-package" class="px-3 py-2 rounded-xl bg-cream border border-peach text-xs font-semibold">
+              <option value="Full Spa Grooming">Full Spa Grooming</option>
+              <option value="Bath & Nail Trim">Bath & Nail Trim</option>
+              <option value="De-Shedding Treatment">De-Shedding</option>
+            </select>
+            <select id="groom-frequency" class="px-3 py-2 rounded-xl bg-cream border border-peach text-xs font-semibold">
+              <option value="14">Every 2 Weeks</option>
+              <option value="30">Monthly</option>
+              <option value="45">Every 6 Weeks</option>
+            </select>
+            <button type="submit" class="px-3 py-2 rounded-xl bg-softorange text-white text-xs font-bold">Set Schedule</button>
+          </form>
+          <div id="grooming-schedules-list" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Module E: Digital Medical Records Vault -->
+        <div class="bg-white rounded-[26px] border border-peach/60 p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-heading font-bold text-xl text-darkbrown">📁 Digital Medical Records Vault</h3>
+            <button onclick="addMedicalRecordMock()" class="px-3 py-1.5 rounded-xl bg-mint/70 hover:bg-mint text-xs font-bold">+ Upload Record</button>
+          </div>
+          <div id="medical-records-list" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Module F: Upcoming Appointments & Shop Orders -->
+        <div class="bg-white rounded-[26px] border border-mint p-6 shadow-sm space-y-4">
+          <h3 class="font-heading font-bold text-xl text-darkbrown">🗓️ My Appointments & Shop Orders</h3>
+          <div id="user-appointments-orders" class="space-y-3 max-h-72 overflow-y-auto pr-1"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 10: ADMIN MANAGEMENT CONSOLE
+         ============================================================ -->
+    <section id="view-admin" class="hidden space-y-8">
+      <div class="bg-darkbrown text-cream rounded-[28px] p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-softorange text-white text-xs font-bold uppercase">PawCare Command Center</span>
+          <h1 class="font-heading font-bold text-3xl mt-2">Clinic & Platform Admin Dashboard</h1>
+          <p class="text-sm text-peach-light/80">Manage appointments, services, doctors, adoptions, shop inventory, articles, and feedback.</p>
+        </div>
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="bg-white/10 px-4 py-3 rounded-2xl">
+            <p id="admin-stat-apts" class="font-heading font-bold text-2xl text-peach">0</p>
+            <p class="text-[11px] uppercase tracking-wider">Bookings</p>
+          </div>
+          <div class="bg-white/10 px-4 py-3 rounded-2xl">
+            <p id="admin-stat-orders" class="font-heading font-bold text-2xl text-mint">0</p>
+            <p class="text-[11px] uppercase tracking-wider">Orders</p>
+          </div>
+          <div class="bg-white/10 px-4 py-3 rounded-2xl">
+            <p id="admin-stat-pets" class="font-heading font-bold text-2xl text-softorange">0</p>
+            <p class="text-[11px] uppercase tracking-wider">Adoptions</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Sub-Navigation -->
+      <div class="flex flex-wrap gap-2">
+        <button onclick="switchAdminTab('bookings')" class="admin-tab-btn px-4 py-2.5 rounded-2xl bg-softorange text-white font-bold text-xs">📅 Appointment Requests</button>
+        <button onclick="switchAdminTab('services')" class="admin-tab-btn px-4 py-2.5 rounded-2xl bg-white border border-peach font-bold text-xs">🩺 Manage Services</button>
+        <button onclick="switchAdminTab('doctors')" class="admin-tab-btn px-4 py-2.5 rounded-2xl bg-white border border-peach font-bold text-xs">👩‍⚕️ Doctors & Trainers</button>
+        <button onclick="switchAdminTab('adoptions')" class="admin-tab-btn px-4 py-2.5 rounded-2xl bg-white border border-peach font-bold text-xs">🏡 Adoption Listings</button>
+        <button onclick="switchAdminTab('shop')" class="admin-tab-btn px-4 py-2.5 rounded-2xl bg-white border border-peach font-bold text-xs">🛍️ Shop & Orders</button>
+        <button onclick="switchAdminTab('articles')" class="admin-tab-btn px-4 py-2.5 rounded-2xl bg-white border border-peach font-bold text-xs">📰 Publish Articles</button>
+        <button onclick="switchAdminTab('feedback')" class="admin-tab-btn px-4 py-2.5 rounded-2xl bg-white border border-peach font-bold text-xs">⭐ Customer Feedback</button>
+      </div>
+
+      <!-- Dynamic Admin Content Container -->
+      <div id="admin-panel-content" class="bg-white rounded-[26px] border border-peach/60 p-6 sm:p-8 shadow-sm"></div>
+    </section>
+
+    <!-- ============================================================
+         VIEW 11: CONTACT & EMERGENCY SUPPORT
+         ============================================================ -->
+    <section id="view-contact" class="hidden space-y-8">
+      <div class="grid lg:grid-cols-12 gap-8">
+        <!-- Clinic Info & Emergency Hotlines -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="bg-white rounded-[26px] border border-peach/60 p-6 sm:p-8 shadow-sm space-y-5">
+            <span class="px-3 py-1 rounded-full bg-mint text-xs font-bold uppercase">We're Here For You</span>
+            <h1 class="font-heading font-bold text-3xl text-darkbrown">Contact PawCare Clinic</h1>
+            <div class="space-y-4 text-sm">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-peach/60 flex items-center justify-center shrink-0"><i class="fa-solid fa-location-dot text-softorange"></i></div>
+                <div>
+                  <p class="font-bold">Main Veterinary & Wellness Center</p>
+                  <p class="text-darkbrown-muted">742 Blossom Meadow Avenue, Suite 100, Greenview District</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-mint/60 flex items-center justify-center shrink-0"><i class="fa-solid fa-phone text-emerald-700"></i></div>
+                <div>
+                  <p class="font-bold">Clinic Desk & 24/7 Emergency SOS</p>
+                  <p class="text-darkbrown-muted">General: +1 (800) 555-PAWS | Emergency: +1 (800) 911-VETS</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-peach/60 flex items-center justify-center shrink-0"><i class="fa-solid fa-envelope text-softorange"></i></div>
+                <div>
+                  <p class="font-bold">Email Support</p>
+                  <p class="text-darkbrown-muted">care@pawcarevet.com</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-mint/60 flex items-center justify-center shrink-0"><i class="fa-solid fa-clock text-emerald-700"></i></div>
+                <div>
+                  <p class="font-bold">Working Hours</p>
+                  <p class="text-darkbrown-muted">Mon–Sat: 8:00 AM – 9:00 PM | Sun: 9:00 AM – 6:00 PM | Emergency ICU: 24/7</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex flex-wrap gap-3">
+              <button onclick="showToast('Opening WhatsApp instant vet nurse chat...', 'success')" class="flex-1 py-3 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-heading font-bold text-sm flex items-center justify-center gap-2 shadow">
+                <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp Vet Chat
+              </button>
+              <button onclick="openSOSModal()" class="py-3 px-4 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-heading font-bold text-sm flex items-center justify-center gap-2 shadow">
+                <i class="fa-solid fa-truck-medical"></i> SOS Hospitals
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive Clinic Map Card -->
+          <div class="bg-mint-light rounded-[26px] border-2 border-mint p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-heading font-bold text-base">📍 Live Clinic Location Map</h3>
+              <span class="text-xs font-bold text-emerald-800 bg-white px-2.5 py-1 rounded-full">Open Now</span>
+            </div>
+            <div class="relative rounded-2xl overflow-hidden h-52 bg-cream border border-mint-dark flex items-center justify-center paw-bg-pattern">
+              <div class="text-center p-4 bg-white/95 rounded-2xl shadow-md border border-peach max-w-xs">
+                <div class="w-10 h-10 rounded-full bg-softorange text-white flex items-center justify-center mx-auto mb-2 animate-bounce">
+                  <i class="fa-solid fa-paw"></i>
+                </div>
+                <p class="font-heading font-bold text-sm">PawCare Flagship Hospital</p>
+                <p class="text-xs text-darkbrown-muted mt-0.5">742 Blossom Meadow Ave • Free Pet Parking</p>
+                <button onclick="showToast('Directions copied to clipboard!', 'success')" class="mt-2.5 px-3 py-1.5 rounded-xl bg-peach text-xs font-bold hover:bg-peach-dark">Get Directions</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Validated Contact Form -->
+        <div class="lg:col-span-7 bg-white rounded-[28px] border border-peach/60 p-6 sm:p-10 shadow-sm">
+          <h2 class="font-heading font-bold text-2xl text-darkbrown mb-2">Send Us a Message</h2>
+          <p class="text-sm text-darkbrown-muted mb-6">Have a question about grooming, boarding, or medical records? Our care coordinators respond within 30 minutes.</p>
+          <form onsubmit="submitContactForm(event)" class="space-y-5">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1">Your Name *</label>
+                <input type="text" id="contact-name" required placeholder="Jane Doe" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1">Email Address *</label>
+                <input type="email" id="contact-email" required placeholder="jane@example.com" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1">Subject *</label>
+              <select id="contact-subject" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach text-sm font-medium">
+                <option>General Inquiry</option>
+                <option>Veterinary Question</option>
+                <option>Grooming & Spa Booking</option>
+                <option>Adoption Follow-up</option>
+                <option>Shop Order Support</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-darkbrown-muted mb-1">Message *</label>
+              <textarea id="contact-message" rows="5" required placeholder="How can we help you and your furry friend?" class="w-full px-4 py-3 rounded-2xl bg-cream border border-peach text-sm"></textarea>
+            </div>
+            <button type="submit" class="w-full py-4 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-base shadow-lg transition">
+              Send Message <i class="fa-solid fa-paper-plane ml-1.5"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-peach/50 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-9 h-9 rounded-xl bg-softorange text-white flex items-center justify-center"><i class="fa-solid fa-paw"></i></div>
+            <span class="font-heading font-bold text-xl text-darkbrown">PawCare 🐾</span>
+          </div>
+          <p class="text-xs text-darkbrown-muted leading-relaxed">Because Every Paw Deserves Love & Care. Modern veterinary medicine, grooming, nutrition, adoption, and smart digital health tracking.</p>
+        </div>
+        <div>
+          <h4 class="font-heading font-bold text-sm uppercase tracking-wider mb-3">Quick Links</h4>
+          <ul class="space-y-2 text-xs font-medium text-darkbrown-muted">
+            <li><button onclick="navigateTo('services')" class="hover:text-softorange">Veterinary & Spa Services</button></li>
+            <li><button onclick="navigateTo('appointments')" class="hover:text-softorange">Online Appointment Booking</button></li>
+            <li><button onclick="navigateTo('doctors')" class="hover:text-softorange">Veterinarians & Trainers</button></li>
+            <li><button onclick="navigateTo('adoption')" class="hover:text-softorange">Pet Adoption & Lost/Found</button></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading font-bold text-sm uppercase tracking-wider mb-3">Smart Pet Tools</h4>
+          <ul class="space-y-2 text-xs font-medium text-darkbrown-muted">
+            <li><button onclick="navigateTo('dashboard')" class="hover:text-softorange">Smart Pet Health Profiles</button></li>
+            <li><button onclick="toggleAIChat(true)" class="hover:text-softorange">AI Pet Care Assistant</button></li>
+            <li><button onclick="navigateTo('health')" class="hover:text-softorange">Pet Food Recommender</button></li>
+            <li><button onclick="navigateTo('dashboard')" class="hover:text-softorange">Growth & Vaccine Tracker</button></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading font-bold text-sm uppercase tracking-wider mb-3">24/7 Emergency SOS</h4>
+          <p class="text-xs text-darkbrown-muted mb-3">Immediate triage & nearby 24-hour veterinary trauma hospitals.</p>
+          <button onclick="openSOSModal()" class="w-full py-2.5 px-4 rounded-xl bg-red-500 hover:bg-red-600 text-white font-heading font-bold text-xs shadow">
+            <i class="fa-solid fa-phone-volume mr-1"></i> Trigger Emergency SOS
+          </button>
+        </div>
+      </div>
+      <div class="border-t border-peach/40 mt-8 pt-6 text-center text-xs text-darkbrown-muted">
+        © 2026 PawCare Smart Pet Care & Veterinary Platform. Crafted with love for every paw.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== FLOATING AI PET CARE ASSISTANT ==================== -->
+  <div class="fixed bottom-5 right-5 z-40">
+    <!-- Chat Window -->
+    <div id="ai-chat-window" class="hidden mb-3 w-[92vw] sm:w-96 bg-white rounded-[26px] border-2 border-peach shadow-2xl overflow-hidden flex flex-col">
+      <div class="bg-gradient-to-r from-peach to-softorange p-4 text-darkbrown flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-softorange text-lg shadow-sm">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div>
+            <h4 class="font-heading font-bold text-sm leading-tight">PawBot AI Care Assistant</h4>
+            <p class="text-[11px] font-medium opacity-85">Nutrition, Grooming & Care Guide</p>
+          </div>
+        </div>
+        <button onclick="toggleAIChat(false)" class="w-8 h-8 rounded-full bg-white/60 hover:bg-white flex items-center justify-center text-darkbrown">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Medical Disclaimer Banner -->
+      <div class="bg-mint-light px-3.5 py-2 text-[11px] text-darkbrown border-b border-mint flex items-start gap-2">
+        <i class="fa-solid fa-circle-info text-emerald-700 mt-0.5"></i>
+        <span><strong>Note:</strong> I provide general pet care tips and <em>cannot diagnose illnesses</em>. For urgent symptoms, please consult a vet or use SOS.</span>
+      </div>
+
+      <!-- Messages Container -->
+      <div id="ai-chat-messages" class="p-4 h-72 overflow-y-auto space-y-3 bg-cream/60 text-xs">
+        <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-peach/60 shadow-sm text-darkbrown">
+          Hi there! 🐾 I'm <strong>PawBot</strong>. Ask me anything about pet nutrition, puppy/kitten routines, grooming schedules, dental care, or daily exercise!
+        </div>
+      </div>
+
+      <!-- Quick Prompt Chips -->
+      <div class="px-3 py-2 bg-white border-t border-peach/30 flex gap-1.5 overflow-x-auto">
+        <button onclick="sendQuickAIPrompt('How often should I brush my dog’s teeth?')" class="shrink-0 px-2.5 py-1 rounded-full bg-peach/40 hover:bg-peach text-[11px] font-semibold">🦷 Dental care</button>
+        <button onclick="sendQuickAIPrompt('What foods are toxic to cats and dogs?')" class="shrink-0 px-2.5 py-1 rounded-full bg-mint/60 hover:bg-mint text-[11px] font-semibold">🚫 Toxic foods</button>
+        <button onclick="sendQuickAIPrompt('Puppy vaccination schedule?')" class="shrink-0 px-2.5 py-1 rounded-full bg-peach/40 hover:bg-peach text-[11px] font-semibold">💉 Vaccines</button>
+      </div>
+
+      <!-- Input Form -->
+      <form onsubmit="handleAIChatSubmit(event)" class="p-3 bg-white border-t border-peach/50 flex items-center gap-2">
+        <input type="text" id="ai-chat-input" required placeholder="Ask about nutrition, grooming, exercise..." class="flex-1 px-3.5 py-2 rounded-xl bg-cream border border-peach text-xs focus:outline-none" />
+        <button type="submit" class="w-9 h-9 rounded-xl bg-softorange hover:bg-softorange-hover text-white flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-paper-plane text-xs"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- Floating Trigger Button -->
+    <button onclick="toggleAIChat()" class="ml-auto flex items-center gap-2.5 bg-darkbrown hover:bg-softorange text-white px-5 py-3.5 rounded-full shadow-xl transition transform hover:scale-105">
+      <i class="fa-solid fa-paw text-peach"></i>
+      <span class="font-heading font-bold text-sm">Ask AI Pet Assistant</span>
+    </button>
+  </div>
+
+  <!-- ==================== SLIDE-OVER SHOPPING CART DRAWER ==================== -->
+  <div id="cart-drawer" class="hidden fixed inset-0 z-50 bg-darkbrown/40 backdrop-blur-xs flex justify-end">
+    <div class="w-full max-w-md bg-cream h-full shadow-2xl flex flex-col justify-between p-6">
+      <div>
+        <div class="flex items-center justify-between border-b border-peach pb-4">
+          <h3 class="font-heading font-bold text-2xl text-darkbrown">🛍️ Your Pet Cart</h3>
+          <button onclick="toggleCartDrawer(false)" class="w-9 h-9 rounded-full bg-peach/50 hover:bg-peach flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="cart-items-list" class="mt-4 space-y-3 max-h-[55vh] overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="border-t border-peach pt-4 space-y-4">
+        <div class="space-y-1.5 text-sm">
+          <div class="flex justify-between text-darkbrown-muted"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+          <div class="flex justify-between text-darkbrown-muted"><span>Care Packaging & Tax (8%)</span><span id="cart-tax">$0.00</span></div>
+          <div class="flex justify-between font-heading font-bold text-lg text-darkbrown pt-1 border-t border-peach/40"><span>Total</span><span id="cart-total">$0.00</span></div>
+        </div>
+        <button onclick="checkoutCart()" class="w-full py-3.5 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-base shadow-lg transition">
+          Complete Checkout <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== UNIVERSAL MODAL CONTAINER ==================== -->
+  <div id="global-modal" class="hidden fixed inset-0 z-50 bg-darkbrown/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div id="global-modal-box" class="bg-white rounded-[28px] border-2 border-peach max-w-xl w-full p-6 sm:p-8 shadow-2xl relative my-8"></div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+  <script>
+    // ------------------------------------------------------------
+    // 1. INITIAL SEED DATA & LOCALSTORAGE STATE MANAGEMENT
+    // ------------------------------------------------------------
+    const STORAGE_KEY = 'pawcare_platform_state_v1';
+
+    const DEFAULT_STATE = {
+      services: [
+        { id: 'srv-1', title: 'Veterinary Consultation', price: 45, duration: '30 mins', icon: 'fa-stethoscope', image: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=600&q=80', desc: 'Comprehensive nose-to-tail physical exam, wellness diagnostics, and personalized care plan.', includes: ['Full vital check', 'Diet & weight review', 'Digital health summary'] },
+        { id: 'srv-2', title: 'Pet Grooming', price: 55, duration: '60 mins', icon: 'fa-scissors', image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600&q=80', desc: 'Breed-specific styling, gentle coat trimming, sanitary tidy, and ear & paw pad care.', includes: ['Breed haircut & styling', 'Ear cleaning', 'Nail clipping & filing'] },
+        { id: 'srv-3', title: 'Pet Bathing and Spa', price: 40, duration: '45 mins', icon: 'fa-bath', image: 'https://images.unsplash.com/photo-1581888227599-779811939961?auto=format&fit=crop&w=600&q=80', desc: 'Hypoallergenic oatmeal hydro-bath, blueberry facial, relaxing massage, and fluff blow-dry.', includes: ['Organic oatmeal shampoo', 'Soothing paw balm', 'Warm towel & blow-dry'] },
+        { id: 'srv-4', title: 'Pet Vaccination', price: 35, duration: '20 mins', icon: 'fa-syringe', image: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=600&q=80', desc: 'Core and lifestyle immunizations (Rabies, DHPP, FVRCP, Bordetella) with automated booster alerts.', includes: ['Pre-vaccine health check', 'Official digital certificate', 'Auto booster reminder'] },
+        { id: 'srv-5', title: 'Pet Training', price: 60, duration: '50 mins', icon: 'fa-award', image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=600&q=80', desc: 'Positive-reinforcement obedience, puppy socialization, leash manners, and anxiety coaching.', includes: ['1-on-1 certified trainer', 'Custom home practice guide', 'Clicker & treat starter kit'] },
+        { id: 'srv-6', title: 'Pet Boarding', price: 50, duration: 'Per Night', icon: 'fa-house-chimney-heart', image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80', desc: 'Cozy climate-controlled luxury suites, supervised group playtimes, and bedtime tuck-ins.', includes: ['24/7 caregiver monitoring', 'Daily photo updates', 'Orthopedic bedding'] },
+        { id: 'srv-7', title: 'Pet Walking', price: 20, duration: '30 mins', icon: 'fa-person-walking-with-cane', image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80', desc: 'GPS-tracked neighborhood adventures, fresh water refills, and paw wipe-down after every walk.', includes: ['GPS route map', 'Solo or buddy pace', 'Hydration & treat check'] },
+        { id: 'srv-8', title: 'Pet Nutrition Consultation', price: 40, duration: '40 mins', icon: 'fa-bowl-rice', image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=600&q=80', desc: 'Custom caloric and allergy-safe meal formulation for puppies, seniors, or sensitive stomachs.', includes: ['Allergy elimination plan', 'Portion calculator', 'Supplement guidance'] },
+        { id: 'srv-9', title: 'Dental Care', price: 75, duration: '45 mins', icon: 'fa-tooth', image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=600&q=80', desc: 'Ultrasonic plaque scaling, gum health evaluation, breath freshening, and home brushing coaching.', includes: ['Tartar & plaque removal', 'Oral exam chart', 'Enzymatic dental kit'] },
+        { id: 'srv-10', title: 'Pet Health Checkups', price: 65, duration: '45 mins', icon: 'fa-heart-pulse', image: 'https://images.unsplash.com/photo-1599443015574-be5fe8a05783?auto=format&fit=crop&w=600&q=80', desc: 'Annual preventive screening including bloodwork panel, parasite check, heart & joint assessment.', includes: ['Complete blood count', 'Parasite & fecal screen', 'Preventive wellness report'] }
+      ],
+      petCategories: [
+        { name: 'Dogs', emoji: '🐶', lifespan: '10–15 Years', diet: 'High-protein balanced kibble, lean meats, omega-3 fatty acids & fresh water.', habitat: 'Indoor family living with daily outdoor walks, mental puzzles & cozy bed.', tips: 'Ensure 30–90 mins daily exercise, annual core vaccines, and weekly teeth brushing.', img: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=700&q=80' },
+        { name: 'Cats', emoji: '🐱', lifespan: '12–18 Years', diet: 'Obligate carnivores: moisture-rich wet food, taurine-fortified protein & hydration fountains.', habitat: 'Enriched vertical climbing trees, scratching posts, quiet litter zones & sunny windows.', tips: 'Schedule semi-annual dental checks, interactive feather play, and hairball grooming.', img: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=700&q=80' },
+        { name: 'Birds', emoji: '🦜', lifespan: '10–50+ Years', diet: 'Formulated avian pellets, leafy greens, sprouted seeds & safe fruits (avoid avocado/chocolate).', habitat: 'Spacious flight cage away from kitchen fumes, natural wood perches & foraging toys.', tips: 'Provide 10–12 hours of dark sleep time, gentle mist baths, and beak/nail trims.', img: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=700&q=80' },
+        { name: 'Rabbits', emoji: '🐰', lifespan: '8–12 Years', diet: '80% unlimited Timothy hay, fresh leafy greens, measured pellets & ceramic water bowl.', habitat: 'Indoor bunny-proofed exercise pen with soft fleece flooring & chew-safe wooden hideouts.', tips: 'Never bathe rabbits in water; brush during molting and monitor daily hay intake.', img: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=700&q=80' },
+        { name: 'Fish', emoji: '🐠', lifespan: '3–15 Years', diet: 'Species-specific flakes, sinking pellets, frozen brine shrimp & spirulina wafers.', habitat: 'Cycled filtered aquarium with stable heater, live aquatic plants & weekly 20% water changes.', tips: 'Test ammonia, nitrite, and pH weekly; avoid overfeeding to keep water crystal clear.', img: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=700&q=80' },
+        { name: 'Hamsters', emoji: '🐹', lifespan: '2–3 Years', diet: 'Fortified hamster seed/pellet mix, tiny portions of broccoli, cucumber & mealworms.', habitat: 'Deep paper bedding (6+ inches for burrowing), solid-surface silent wheel & sand bath.', tips: 'Respect nocturnal sleep schedules; handle gently close to soft surfaces.', img: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&w=700&q=80' },
+        { name: 'Other Small Pets', emoji: '🦔', lifespan: '4–10 Years', diet: 'Species-tailored nutrition (e.g., Vitamin C greens for Guinea Pigs, insectivore diets for Hedgehogs).', habitat: 'Draft-free, temperature-regulated enclosures with enrichment tunnels and hideaways.', tips: 'Weigh small pets weekly on a gram scale—early weight changes signal health needs.', img: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=700&q=80' }
+      ],
+      doctors: [
+        { id: 'doc-1', name: 'Dr. Clara Bennett, DVM', role: 'Chief Veterinarian', qual: 'DVM, Cornell University', exp: 11, spec: 'Small Animal Medicine', timings: 'Mon–Fri • 9:00 AM – 5:00 PM', availability: 'Available Today', fee: 45, rating: 4.98, reviewsCount: 312, photo: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80' },
+        { id: 'doc-2', name: 'Dr. Marcus Vance, DVM', role: 'Veterinary Surgeon & Dentist', qual: 'DVM, MS Veterinary Surgery', exp: 9, spec: 'Surgery & Dental', timings: 'Tue–Sat • 10:00 AM – 6:00 PM', availability: 'Available Today', fee: 65, rating: 4.95, reviewsCount: 248, photo: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=500&q=80' },
+        { id: 'doc-3', name: 'Dr. Elena Rostova, DVM', role: 'Avian & Exotic Specialist', qual: 'DVM, Board Certified Exotics', exp: 8, spec: 'Avian & Exotics', timings: 'Wed–Sun • 9:30 AM – 4:30 PM', availability: 'Weekend', fee: 55, rating: 4.97, reviewsCount: 190, photo: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=500&q=80' },
+        { id: 'doc-4', name: 'Liam O’Connor, CPDT-KA', role: 'Senior Pet Behaviorist', qual: 'Certified Professional Dog Trainer', exp: 7, spec: 'Behavioral Training', timings: 'Mon–Sat • 8:30 AM – 4:00 PM', availability: 'Available Today', fee: 60, rating: 4.94, reviewsCount: 275, photo: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=500&q=80' },
+        { id: 'doc-5', name: 'Dr. Priya Nair, PhD, DVM', role: 'Clinical Pet Nutritionist', qual: 'DVM, PhD Animal Nutrition', exp: 12, spec: 'Pet Nutrition', timings: 'Thu–Sun • 11:00 AM – 7:00 PM', availability: 'Weekend', fee: 40, rating: 4.99, reviewsCount: 340, photo: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=500&q=80' }
+      ],
+      appointments: [
+        { id: 'PAW-1042', petType: 'Dog', petName: 'Milo', petAge: '3 yrs', service: 'Veterinary Consultation', doctor: 'Dr. Clara Bennett, DVM', date: new Date().toISOString().split('T')[0], slot: '10:00 AM', ownerName: 'Sarah Jenkins', ownerContact: 'sarah@example.com', notes: 'Annual checkup & itchy ear', status: 'Confirmed' }
+      ],
+      articles: [
+        { id: 'art-1', category: 'Healthy food habits', title: 'Balanced Bowl Blueprint: Protein, Healthy Fats & Hydration', readTime: '4 min read', summary: 'Learn how to read pet food labels, avoid harmful human snacks, and transition diets smoothly without tummy upset.', content: 'A thriving pet starts with species-appropriate nutrition. Always check that whole meat or fish is the #1 ingredient. Avoid toxic items like grapes, onions, xylitol, chocolate, and macadamia nuts. Transition new foods over 7 days (25% new food every 2 days) to protect gut flora.' },
+        { id: 'art-2', category: 'Vaccination schedules', title: 'Core vs. Lifestyle Vaccines: Puppy, Kitten & Adult Timelines', readTime: '5 min read', summary: 'A clear milestone timeline from 6 weeks to senior boosters so your pet stays protected year-round.', content: 'Puppies and kittens begin core vaccines at 6–8 weeks, receiving boosters every 3–4 weeks until 16 weeks old. Adult pets require annual wellness evaluations and triennial or annual boosters depending on local exposure risks like boarding or hiking.' },
+        { id: 'art-3', category: 'Daily exercise', title: 'Mental Enrichment & Physical Play for Indoor & Outdoor Pets', readTime: '4 min read', summary: 'Prevent boredom and obesity with sniff-walks, puzzle feeders, and interactive play sessions.', content: 'Physical exercise strengthens joints and cardiovascular health, while 15 minutes of scent work or puzzle toys equals 45 minutes of running in mental stimulation! Aim for two 20-minute interactive play bursts daily for cats and 30–60 minutes of structured walks for dogs.' },
+        { id: 'art-4', category: 'Grooming routines', title: 'Stress-Free Brushing, Nail Trims & Ear Care at Home', readTime: '5 min read', summary: 'Step-by-step gentle desensitization techniques to make coat and paw maintenance a bonding ritual.', content: 'Brush double-coated breeds 3–4 times weekly to prevent painful mats. Introduce nail clippers slowly using high-value treats—trim only the translucent tip away from the pink quick, and clean ears with vet-approved enzymatic solution.' },
+        { id: 'art-5', category: 'Dental hygiene', title: 'Why 80% of Pets Show Dental Disease by Age 3 (And How to Stop It)', readTime: '4 min read', summary: 'Protect your pet’s heart, kidneys, and smile with enzymatic toothpaste and VOHC dental chews.', content: 'Plaque mineralizes into tartar within 48 hours. Never use human toothpaste (fluoride and xylitol are toxic). Use poultry- or malt-flavored enzymatic pet paste 3–4 times a week alongside annual ultrasonic cleanings.' },
+        { id: 'art-6', category: 'Seasonal pet care', title: 'Summer Paw Protection & Winter Cozy Wellness Guide', readTime: '3 min read', summary: 'Simple weather-smart habits to prevent heatstroke, hot pavement burns, and dry winter skin.', content: 'Test asphalt with the back of your hand for 7 seconds—if it is too hot for you, it burns paw pads. In colder months, wipe de-icing salts off paws after walks and provide draft-free orthopedic beds.' },
+        { id: 'art-7', category: 'Common health warning signs', title: '10 Subtle Symptoms You Should Never Ignore', readTime: '6 min read', summary: 'Recognize early red flags like hidden pain, sudden thirst changes, lethargy, and appetite shifts.', content: 'Pets instinctively mask discomfort. Contact your veterinarian promptly if you notice sudden water intake spikes, repeated vomiting, pale gums, labored breathing, limping lasting >24 hours, or hiding behavior in cats.' },
+        { id: 'art-8', category: 'Puppy and kitten care', title: 'First 90 Days: Pet-Proofing, Socialization & Sleep Routines', readTime: '5 min read', summary: 'Set your new baby up for lifelong confidence with gentle exposure and positive crate/safe-zone habits.', content: 'Secure electrical cords, toxic houseplants (like lilies for cats), and small swallowable toys. Gentle positive exposure to new sounds, textures, and friendly people before 14 weeks builds fearless adult companions.' },
+        { id: 'art-9', category: 'Senior pet care', title: 'Golden Years Comfort: Joint Support, Ramps & Gentle Nutrition', readTime: '5 min read', summary: 'Help senior dogs and cats move comfortably with glucosamine, non-slip rugs, and bi-annual checkups.', content: 'Senior pets (7+ years) benefit from raised food bowls, orthopedic memory-foam beds, non-slip runners on hardwood floors, and semi-annual blood panels to catch kidney or thyroid changes early.' }
+      ],
+      adoptions: [
+        { id: 'adp-1', name: 'Barnaby', species: 'Dog', breed: 'Golden Corgi Mix', age: '1.5 Years', gender: 'Male', vaccinated: true, neutered: true, bio: 'Cheerful, house-trained, loves belly rubs and gentle play with kids.', photo: 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?auto=format&fit=crop&w=600&q=80' },
+        { id: 'adp-2', name: 'Luna', species: 'Cat', breed: 'Scottish Fold Mix', age: '1 Year', gender: 'Female', vaccinated: true, neutered: true, bio: 'Purr machine who adores window bird-watching and cozy afternoon naps.', photo: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80' },
+        { id: 'adp-3', name: 'Clover', species: 'Rabbit', breed: 'Holland Lop', age: '8 Months', gender: 'Female', vaccinated: true, neutered: true, bio: 'Litter-box trained sweetheart who does joyful binkies for fresh cilantro.', photo: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=600&q=80' },
+        { id: 'adp-4', name: 'Sunny', species: 'Bird', breed: 'Cockatiel', age: '1 Year', gender: 'Male', vaccinated: true, neutered: false, bio: 'Whistles happy tunes every morning and loves stepping onto fingers.', photo: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=600&q=80' }
+      ],
+      lostFound: [
+        { id: 'lf-1', type: 'LOST', name: 'Charlie', species: 'Beagle Dog', location: 'Oakwood Park & 5th St', date: '2 hours ago', contact: '+1 (555) 892-3310', desc: 'Wearing a mint green collar with a bone tag. Very friendly, responds to whistling.', photo: 'https://images.unsplash.com/photo-1505628346881-b72b27e84530?auto=format&fit=crop&w=600&q=80' },
+        { id: 'lf-2', type: 'FOUND', name: 'Unknown Ginger Tabby', species: 'Cat', location: 'Maple Bakery Alley', date: 'Yesterday', contact: '+1 (555) 441-9021', desc: 'Safe at PawCare Clinic! Wearing a blue bell collar, no microchip detected yet.', photo: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=600&q=80' }
+      ],
+      products: [
+        { id: 'prd-1', name: 'Salmon & Sweet Potato Holistic Kibble (5kg)', category: 'Pet food', price: 42.00, rating: 4.9, image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=600&q=80', desc: 'Omega-rich grain-free recipe for glossy coats and gentle digestion.' },
+        { id: 'prd-2', name: 'Interactive Treat Puzzle & Snuffle Mat', category: 'Toys', price: 24.50, rating: 4.8, image: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=600&q=80', desc: 'Slows fast eaters and provides 30 minutes of brain-stimulating foraging fun.' },
+        { id: 'prd-3', name: 'Pastel Peach Padded No-Pull Harness & Leash', category: 'Collars and leashes', price: 29.00, rating: 4.9, image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80', desc: 'Breathable soft mesh chest support with reflective safety stitching.' },
+        { id: 'prd-4', name: 'Oatmeal & Aloe Soothing Spa Shampoo', category: 'Grooming products', price: 18.00, rating: 4.9, image: 'https://images.unsplash.com/photo-1581888227599-779811939961?auto=format&fit=crop&w=600&q=80', desc: 'pH-balanced tearless formula that calms dry, itchy skin naturally.' },
+        { id: 'prd-5', name: 'Cloud-Plush Orthopedic Donut Cuddle Bed', category: 'Beds and blankets', price: 54.00, rating: 5.0, image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80', desc: 'Machine-washable calming bolster bed for deep, joint-supporting sleep.' },
+        { id: 'prd-6', name: 'Enzymatic Dental Care & Finger Brush Kit', category: 'Medicines and care supplies', price: 16.50, rating: 4.7, image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=600&q=80', desc: 'Vet-formulated poultry-flavored paste that dissolves tartar without rinsing.' }
+      ],
+      cart: [
+        { productId: 'prd-1', qty: 1 },
+        { productId: 'prd-4', qty: 1 }
+      ],
+      orders: [
+        { id: 'ORD-7721', date: '2026-11-18', items: 'Cloud-Plush Orthopedic Bed (x1)', total: '$58.32', status: 'Delivered' }
+      ],
+      pets: [
+        {
+          id: 'pet-1',
+          name: 'Milo',
+          species: 'Dog',
+          breed: 'Golden Retriever',
+          age: '3 Years',
+          weight: 28.4,
+          avatar: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80',
+          allergies: 'Mild chicken sensitivity',
+          medicalHistory: 'Neutered; healthy heart & hips; mild seasonal ear irritation treated Oct 2025.',
+          growthHistory: [
+            { label: '6m', weight: 16.5 },
+            { label: '1y', weight: 24.0 },
+            { label: '2y', weight: 27.2 },
+            { label: '2.5y', weight: 28.0 },
+            { label: 'Now', weight: 28.4 }
+          ],
+          vaccines: [
+            { name: 'Rabies 3-Year Booster', dueDate: '2026-12-10', status: 'Due Soon' },
+            { name: 'DHPP Annual Core', dueDate: '2027-03-15', status: 'Up to Date' },
+            { name: 'Broad-Spectrum Deworming', dueDate: '2026-11-28', status: 'Due in 5 Days' }
+          ],
+          groomingSchedules: [
+            { id: 'grm-1', pkg: 'Full Spa Grooming', freqDays: 30, nextDate: '2026-12-05' }
+          ],
+          medicalRecords: [
+            { id: 'rec-1', title: 'Annual Wellness Blood Panel', date: '2026-09-14', vet: 'Dr. Clara Bennett, DVM', type: 'Lab Report' },
+            { id: 'rec-2', title: 'Digital Rabies & DHPP Certificate', date: '2026-03-15', vet: 'Dr. Clara Bennett, DVM', type: 'Certificate' }
+          ],
+          activity: { walkMins: 45, walkGoal: 60, playMins: 25, playGoal: 30, sleepHours: 12, sleepGoal: 13, waterBowls: 3, waterGoal: 4 }
+        },
+        {
+          id: 'pet-2',
+          name: 'Mochi',
+          species: 'Cat',
+          breed: 'British Shorthair',
+          age: '2 Years',
+          weight: 4.8,
+          avatar: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80',
+          allergies: 'None known',
+          medicalHistory: 'Indoor cat; spayed; ultrasonic dental checkup clean.',
+          growthHistory: [
+            { label: '4m', weight: 2.1 },
+            { label: '8m', weight: 3.6 },
+            { label: '1y', weight: 4.3 },
+            { label: '1.5y', weight: 4.6 },
+            { label: 'Now', weight: 4.8 }
+          ],
+          vaccines: [
+            { name: 'FVRCP Feline Core Booster', dueDate: '2027-01-20', status: 'Up to Date' },
+            { name: 'Feline Deworming & Flea Guard', dueDate: '2026-12-01', status: 'Due in 8 Days' }
+          ],
+          groomingSchedules: [
+            { id: 'grm-2', pkg: 'De-Shedding & Nail Trim', freqDays: 30, nextDate: '2026-12-12' }
+          ],
+          medicalRecords: [
+            { id: 'rec-3', title: 'Feline Dental & Heart Check Summary', date: '2026-08-22', vet: 'Dr. Marcus Vance, DVM', type: 'Visit Summary' }
+          ],
+          activity: { walkMins: 15, walkGoal: 20, playMins: 30, playGoal: 30, sleepHours: 15, sleepGoal: 16, waterBowls: 2, waterGoal: 3 }
+        }
+      ],
+      activePetId: 'pet-1',
+      communityPosts: [
+        { id: 'pst-1', author: 'Maya & Mochi 🐱', tag: 'Care Tip 💡', time: '2 hours ago', content: 'Switching to a ceramic water fountain doubled Mochi’s daily water intake! Highly recommend for indoor kitties.', photo: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=700&q=80', likes: 24, comments: ['Such a great tip! Worked for our tabby too. — Liam'] },
+        { id: 'pst-2', author: 'Daniel & Cooper 🐶', tag: 'Training Win 🏆', time: 'Yesterday', content: 'After 3 sessions with Trainer Liam at PawCare, Cooper finally walks calmly on a loose leash past squirrels!', photo: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=700&q=80', likes: 41, comments: ['Way to go Cooper!! 🐾', 'Trainer Liam is amazing!'] }
+      ],
+      reviews: [
+        { id: 'rev-1', customer: 'Emily Carter', petName: 'Biscuit (Cavapoo)', service: 'Pet Grooming & Spa', rating: 5, comment: 'Biscuit usually trembles at groomers, but PawCare’s pastel suite and oatmeal spa had him wagging the entire time!', photo: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=300&q=80' },
+        { id: 'rev-2', customer: 'Rohan Mehta', petName: 'Kiwi (Cockatiel)', service: 'Veterinary Consultation', rating: 5, comment: 'Finding a knowledgeable avian vet is rare. Dr. Elena checked Kiwi gently and gave us a wonderful pellet nutrition guide.', photo: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=300&q=80' },
+        { id: 'rev-3', customer: 'Sophia Alvarez', petName: 'Oliver (Maine Coon)', service: 'Dental Care', rating: 5, comment: 'The digital medical records and automated booster reminders keep Oliver’s health effortlessly organized. 10/10!', photo: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=300&q=80' }
+      ]
+    };
+
+    let appState = loadState();
+    let activeCategoryFilter = 'Dogs';
+    let activeArticleCategory = 'All';
+    let activeAdoptionFilter = 'All';
+    let activeShopCategory = 'All';
+    let activeAdminTab = 'bookings';
+    let growthChartInstance = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          return { ...DEFAULT_STATE, ...parsed };
+        }
+      } catch (e) {
+        console.warn('Resetting state to defaults');
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn('Could not persist to localStorage');
+      }
+    }
+
+    // ------------------------------------------------------------
+    // 2. NAVIGATION & TOAST HELPERS
+    // ------------------------------------------------------------
+    function navigateTo(viewId) {
+      const views = ['home', 'services', 'appointments', 'doctors', 'health', 'adoption', 'shop', 'community', 'dashboard', 'admin', 'contact'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.add('hidden');
+      });
+      const target = document.getElementById(`view-${viewId}`);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      document.querySelectorAll('#desktop-nav .nav-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.nav === viewId);
+      });
+
+      // Trigger view-specific renders
+      if (viewId === 'services') renderAllServices();
+      if (viewId === 'appointments') initAppointmentForm();
+      if (viewId === 'doctors') renderDoctors();
+      if (viewId === 'health') { renderArticles(); generateFoodRecommendation(); }
+      if (viewId === 'adoption') { renderAdoptions(); renderLostFound(); }
+      if (viewId === 'shop') renderShopProducts();
+      if (viewId === 'community') renderCommunityFeed();
+      if (viewId === 'dashboard') renderUserDashboard();
+      if (viewId === 'admin') renderAdminConsole();
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bg = type === 'error' ? 'bg-red-500 text-white' : 'bg-darkbrown text-cream border border-peach';
+      toast.className = `${bg} px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-semibold flex items-center gap-2.5 pointer-events-auto transition-all duration-300`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : 'fa-paw text-peach'}"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3400);
+    }
+
+    function openModal(htmlContent) {
+      const modal = document.getElementById('global-modal');
+      const box = document.getElementById('global-modal-box');
+      box.innerHTML = `<button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-peach/50 hover:bg-peach flex items-center justify-center text-darkbrown"><i class="fa-solid fa-xmark"></i></button>` + htmlContent;
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('global-modal').classList.add('hidden');
+    }
+
+    // ------------------------------------------------------------
+    // 3. HOMEPAGE: HERO SEARCH, FEATURED SERVICES, CATEGORIES & REVIEWS
+    // ------------------------------------------------------------
+    function handleHeroSearch(query) {
+      const box = document.getElementById('hero-search-results');
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        box.classList.add('hidden');
+        return;
+      }
+      const matches = appState.services.filter(s => s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q));
+      box.classList.remove('hidden');
+      if (matches.length === 0) {
+        box.innerHTML = `<p class="text-xs text-darkbrown-muted p-2">No matching service found. Try "Grooming", "Dental", or "Vaccination".</p>`;
+        return;
+      }
+      box.innerHTML = matches.slice(0, 4).map(s => `
+        <div class="flex items-center justify-between p-2 rounded-xl hover:bg-cream">
+          <div>
+            <p class="font-heading font-bold text-sm text-darkbrown">${s.title} <span class="text-softorange">($${s.price})</span></p>
+            <p class="text-xs text-darkbrown-muted line-clamp-1">${s.desc}</p>
+          </div>
+          <button onclick="bookSpecificService('${s.title}')" class="px-3 py-1.5 rounded-xl bg-softorange text-white text-xs font-bold shrink-0">Book</button>
+        </div>
+      `).join('');
+    }
+
+    function renderHomeFeaturedServices() {
+      const container = document.getElementById('home-featured-services');
+      container.innerHTML = appState.services.slice(0, 4).map(s => `
+        <div class="card-hover bg-white rounded-[24px] border border-peach/60 overflow-hidden flex flex-col justify-between shadow-sm">
+          <div>
+            <div class="relative h-44 overflow-hidden">
+              <img src="${s.image}" onerror="this.src='https://placehold.co/400x300/FFCBA4/49352E?text=${encodeURIComponent(s.title)}'" alt="${s.title}" class="w-full h-full object-cover" />
+              <span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 font-heading font-bold text-sm text-softorange shadow">$${s.price}</span>
+            </div>
+            <div class="p-5">
+              <div class="w-10 h-10 rounded-xl bg-mint/70 flex items-center justify-center text-darkbrown mb-3">
+                <i class="fa-solid ${s.icon}"></i>
+              </div>
+              <h3 class="font-heading font-bold text-lg text-darkbrown">${s.title}</h3>
+              <p class="text-xs text-darkbrown-muted mt-1.5 leading-relaxed">${s.desc}</p>
+            </div>
+          </div>
+          <div class="px-5 pb-5 flex gap-2">
+            <button onclick="bookSpecificService('${s.title}')" class="flex-1 py-2.5 rounded-xl bg-softorange hover:bg-softorange-hover text-white font-bold text-xs transition">Book Now</button>
+            <button onclick="viewServiceDetails('${s.id}')" class="px-3 py-2.5 rounded-xl bg-cream hover:bg-peach/50 border border-peach text-xs font-bold">Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPetCategories() {
+      const tabsEl = document.getElementById('pet-category-tabs');
+      const detailEl = document.getElementById('pet-category-detail');
+
+      tabsEl.innerHTML = appState.petCategories.map(cat => {
+        const active = cat.name === activeCategoryFilter;
+        return `<button onclick="activeCategoryFilter='${cat.name}'; renderPetCategories()" class="px-4 py-2.5 rounded-2xl text-sm font-heading font-bold transition shadow-xs ${active ? 'bg-softorange text-white scale-105' : 'bg-white hover:bg-peach/40 text-darkbrown border border-peach'}">${cat.emoji} ${cat.name}</button>`;
+      }).join('');
+
+      const current = appState.petCategories.find(c => c.name === activeCategoryFilter) || appState.petCategories[0];
+      detailEl.innerHTML = `
+        <div class="grid md:grid-cols-12 gap-6 items-center">
+          <div class="md:col-span-4">
+            <img src="${current.img}" onerror="this.src='https://placehold.co/500x400/C8E6D0/49352E?text=${current.name}'" alt="${current.name}" class="w-full h-60 object-cover rounded-[22px] border-4 border-peach/40 shadow" />
+          </div>
+          <div class="md:col-span-8 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-heading font-bold text-2xl sm:text-3xl text-darkbrown">${current.emoji} ${current.name} Care Guide</h3>
+              <span class="px-3.5 py-1 rounded-full bg-peach/60 text-xs font-bold">Avg Lifespan: ${current.lifespan}</span>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 text-sm">
+              <div class="bg-cream p-4 rounded-2xl border border-peach/50">
+                <p class="font-heading font-bold text-softorange mb-1">🥗 Nutrition & Diet</p>
+                <p class="text-xs text-darkbrown-muted leading-relaxed">${current.diet}</p>
+              </div>
+              <div class="bg-cream p-4 rounded-2xl border border-mint">
+                <p class="font-heading font-bold text-emerald-700 mb-1">🏡 Habitat & Enrichment</p>
+                <p class="text-xs text-darkbrown-muted leading-relaxed">${current.habitat}</p>
+              </div>
+            </div>
+            <div class="bg-mint-light/70 p-4 rounded-2xl border border-mint flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <p class="text-xs text-darkbrown"><strong>Vet Pro-Tip:</strong> ${current.tips}</p>
+              <button onclick="bookSpecificService('Veterinary Consultation')" class="shrink-0 px-4 py-2 rounded-xl bg-darkbrown text-white text-xs font-bold hover:opacity-90">Book ${current.name} Checkup</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderReviews() {
+      const grid = document.getElementById('reviews-grid');
+      grid.innerHTML = appState.reviews.map(r => `
+        <div class="card-hover bg-white rounded-[24px] border border-peach/60 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="text-amber-400 text-sm">${'★'.repeat(r.rating)}</div>
+              <span class="px-2.5 py-1 rounded-full bg-mint/60 text-[11px] font-bold text-emerald-900"><i class="fa-solid fa-circle-check mr-1"></i>Verified Visit</span>
+            </div>
+            <p class="text-sm text-darkbrown italic leading-relaxed">"${r.comment}"</p>
+          </div>
+          <div class="flex items-center gap-3 pt-3 border-t border-peach/30">
+            <img src="${r.photo}" onerror="this.src='https://placehold.co/100x100/FFCBA4/49352E?text=Pet'" alt="${r.petName}" class="w-12 h-12 rounded-2xl object-cover border-2 border-peach" />
+            <div>
+              <p class="font-heading font-bold text-sm text-darkbrown">${r.customer}</p>
+              <p class="text-xs text-darkbrown-muted">${r.petName} • ${r.service}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openReviewModal() {
+      openModal(`
+        <h3 class="font-heading font-bold text-2xl text-darkbrown mb-1">Share Your PawCare Experience 🐾</h3>
+        <p class="text-xs text-darkbrown-muted mb-4">Your verified review helps fellow pet parents choose gentle care.</p>
+        <form onsubmit="submitNewReview(event)" class="space-y-4">
+          <div class="grid sm:grid-cols-2 gap-3">
+            <input type="text" id="rev-name" required placeholder="Your Name" class="px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+            <input type="text" id="rev-pet" required placeholder="Pet Name & Breed" class="px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <select id="rev-service" class="px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-semibold">
+              ${appState.services.map(s => `<option value="${s.title}">${s.title}</option>`).join('')}
+            </select>
+            <select id="rev-rating" class="px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-semibold">
+              <option value="5">★★★★★ (5/5 Amazing)</option>
+              <option value="4">★★★★☆ (4/5 Great)</option>
+            </select>
+          </div>
+          <textarea id="rev-comment" required rows="3" placeholder="Tell us about your visit..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm"></textarea>
+          <button type="submit" class="w-full py-3 rounded-2xl bg-softorange text-white font-heading font-bold text-sm shadow">Publish Review</button>
+        </form>
+      `);
+    }
+
+    function submitNewReview(e) {
+      e.preventDefault();
+      appState.reviews.unshift({
+        id: 'rev-' + Date.now(),
+        customer: document.getElementById('rev-name').value,
+        petName: document.getElementById('rev-pet').value,
+        service: document.getElementById('rev-service').value,
+        rating: parseInt(document.getElementById('rev-rating').value, 10),
+        comment: document.getElementById('rev-comment').value,
+        photo: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=300&q=80'
+      });
+      saveState();
+      renderReviews();
+      closeModal();
+      showToast('Thank you! Your verified review is now live.');
+    }
+
+    // ------------------------------------------------------------
+    // 4. ALL 10 SERVICES PAGE
+    // ------------------------------------------------------------
+    function renderAllServices() {
+      const filter = (document.getElementById('services-filter-input')?.value || '').toLowerCase();
+      const filtered = appState.services.filter(s => s.title.toLowerCase().includes(filter) || s.desc.toLowerCase().includes(filter));
+      const grid = document.getElementById('all-services-grid');
+      grid.innerHTML = filtered.map(s => `
+        <div class="card-hover bg-white rounded-[24px] border border-peach/60 overflow-hidden flex flex-col justify-between shadow-sm">
+          <div>
+            <div class="relative h-48 overflow-hidden">
+              <img src="${s.image}" onerror="this.src='https://placehold.co/500x320/FFCBA4/49352E?text=${encodeURIComponent(s.title)}'" alt="${s.title}" class="w-full h-full object-cover" />
+              <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-darkbrown/80 text-white text-xs font-semibold backdrop-blur-xs">
+                <i class="fa-regular fa-clock mr-1"></i> ${s.duration}
+              </div>
+              <div class="absolute top-3 right-3 px-3.5 py-1 rounded-full bg-white font-heading font-bold text-base text-softorange shadow">
+                $${s.price}
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-9 h-9 rounded-xl bg-mint/70 flex items-center justify-center text-darkbrown"><i class="fa-solid ${s.icon}"></i></div>
+                <h3 class="font-heading font-bold text-xl text-darkbrown">${s.title}</h3>
+              </div>
+              <p class="text-xs text-darkbrown-muted leading-relaxed">${s.desc}</p>
+            </div>
+          </div>
+          <div class="px-6 pb-6 flex gap-2.5">
+            <button onclick="bookSpecificService('${s.title}')" class="flex-1 py-3 rounded-xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-xs shadow transition">Book Now</button>
+            <button onclick="viewServiceDetails('${s.id}')" class="px-4 py-3 rounded-xl bg-cream hover:bg-peach/50 border border-peach text-xs font-bold transition">View Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewServiceDetails(serviceId) {
+      const s = appState.services.find(item => item.id === serviceId);
+      if (!s) return;
+      openModal(`
+        <img src="${s.image}" onerror="this.src='https://placehold.co/600x300/FFCBA4/49352E?text=${encodeURIComponent(s.title)}'" class="w-full h-48 object-cover rounded-2xl mb-4" />
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-heading font-bold text-2xl text-darkbrown">${s.title}</h3>
+          <span class="px-3.5 py-1 rounded-full bg-peach font-heading font-bold text-lg text-darkbrown">$${s.price}</span>
+        </div>
+        <p class="text-xs font-bold text-emerald-700 mb-3"><i class="fa-regular fa-clock mr-1"></i> Estimated Duration: ${s.duration} • Fear-Free Certified</p>
+        <p class="text-sm text-darkbrown-muted leading-relaxed mb-4">${s.desc}</p>
+        <div class="bg-cream p-4 rounded-2xl border border-mint mb-5">
+          <p class="font-heading font-bold text-sm mb-2">What's Included:</p>
+          <ul class="space-y-1.5 text-xs">
+            ${(s.includes || ['Gentle specialist care', 'Digital visit notes']).map(inc => `<li><i class="fa-solid fa-check text-emerald-600 mr-2"></i>${inc}</li>`).join('')}
+          </ul>
+        </div>
+        <button onclick="closeModal(); bookSpecificService('${s.title}')" class="w-full py-3.5 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-sm shadow">Book This Service Now</button>
+      `);
+    }
+
+    function bookSpecificService(serviceTitle, doctorName = '') {
+      navigateTo('appointments');
+      setTimeout(() => {
+        const srvSelect = document.getElementById('apt-service');
+        if (srvSelect) srvSelect.value = serviceTitle;
+        if (doctorName) {
+          const docSelect = document.getElementById('apt-doctor');
+          if (docSelect) docSelect.value = doctorName;
+        }
+        updateAvailableSlots();
+      }, 60);
+    }
+
+    // ------------------------------------------------------------
+    // 5. ONLINE APPOINTMENT BOOKING (REAL SLOT AVAILABILITY)
+    // ------------------------------------------------------------
+    const ALL_TIME_SLOTS = ['09:00 AM', '10:00 AM', '11:30 AM', '01:30 PM', '03:00 PM', '04:30 PM', '06:00 PM', '07:30 PM'];
+
+    function initAppointmentForm() {
+      const srvSelect = document.getElementById('apt-service');
+      const docSelect = document.getElementById('apt-doctor');
+      const dateInput = document.getElementById('apt-date');
+
+      srvSelect.innerHTML = appState.services.map(s => `<option value="${s.title}">${s.title} ($${s.price})</option>`).join('');
+      docSelect.innerHTML = appState.doctors.map(d => `<option value="${d.name}">${d.name} (${d.spec})</option>`).join('');
+
+      if (!dateInput.value) {
+        dateInput.value = new Date().toISOString().split('T')[0];
+        dateInput.min = dateInput.value;
+      }
+      updateAvailableSlots();
+    }
+
+    function updateAvailableSlots() {
+      const doctor = document.getElementById('apt-doctor').value;
+      const date = document.getElementById('apt-date').value;
+      const selectedInput = document.getElementById('apt-selected-slot');
+      const grid = document.getElementById('apt-slots-grid');
+
+      const bookedSlots = appState.appointments
+        .filter(a => a.doctor === doctor && a.date === date && a.status !== 'Cancelled')
+        .map(a => a.slot);
+
+      if (bookedSlots.includes(selectedInput.value)) {
+        selectedInput.value = '';
+      }
+
+      grid.innerHTML = ALL_TIME_SLOTS.map(slot => {
+        const isBooked = bookedSlots.includes(slot);
+        const isSelected = selectedInput.value === slot;
+        if (isBooked) {
+          return `<button type="button" disabled class="py-2.5 px-3 rounded-xl bg-gray-200 text-gray-400 text-xs font-bold cursor-not-allowed line-through">${slot} (Booked)</button>`;
+        }
+        return `<button type="button" onclick="selectTimeSlot('${slot}')" class="py-2.5 px-3 rounded-xl text-xs font-bold transition ${isSelected ? 'bg-softorange text-white shadow-md scale-102' : 'bg-mint/60 hover:bg-mint text-darkbrown border border-emerald-500/30'}">${slot}</button>`;
+      }).join('');
+    }
+
+    function selectTimeSlot(slot) {
+      document.getElementById('apt-selected-slot').value = slot;
+      updateAvailableSlots();
+    }
+
+    function submitAppointment(e) {
+      e.preventDefault();
+      const slot = document.getElementById('apt-selected-slot').value;
+      if (!slot) {
+        showToast('Please select an available time slot first!', 'error');
+        return;
+      }
+      const bookingId = 'PAW-' + Math.floor(1000 + Math.random() * 9000);
+      const newApt = {
+        id: bookingId,
+        petType: document.getElementById('apt-pet-type').value,
+        petName: document.getElementById('apt-pet-name').value,
+        petAge: document.getElementById('apt-pet-age').value,
+        service: document.getElementById('apt-service').value,
+        doctor: document.getElementById('apt-doctor').value,
+        date: document.getElementById('apt-date').value,
+        slot: slot,
+        ownerName: document.getElementById('apt-owner-name').value,
+        ownerContact: document.getElementById('apt-owner-contact').value,
+        notes: document.getElementById('apt-notes').value || 'Routine visit',
+        status: 'Confirmed'
+      };
+
+      appState.appointments.unshift(newApt);
+      saveState();
+      updateAvailableSlots();
+
+      document.getElementById('conf-booking-id').textContent = `${newApt.id} • ${newApt.petName} (${newApt.petType})`;
+      document.getElementById('conf-details').innerHTML = `
+        <p><strong>Service:</strong> ${newApt.service}</p>
+        <p><strong>Specialist:</strong> ${newApt.doctor}</p>
+        <p><strong>Date & Time:</strong> ${newApt.date} at ${newApt.slot}</p>
+        <p><strong>Owner:</strong> ${newApt.ownerName} (${newApt.ownerContact})</p>
+      `;
+      document.getElementById('appointment-confirmation-card').classList.remove('hidden');
+      document.getElementById('apt-selected-slot').value = '';
+      showToast(`Appointment ${bookingId} confirmed! Slot locked.`);
+    }
+
+    // ------------------------------------------------------------
+    // 6. VETERINARIANS & TRAINERS DIRECTORY
+    // ------------------------------------------------------------
+    function renderDoctors() {
+      const spec = document.getElementById('doc-filter-spec').value;
+      const minExp = parseInt(document.getElementById('doc-filter-exp').value, 10);
+      const avail = document.getElementById('doc-filter-avail').value;
+
+      const filtered = appState.doctors.filter(d => {
+        const matchSpec = spec === 'all' || d.spec === spec;
+        const matchExp = d.exp >= minExp;
+        const matchAvail = avail === 'all' || d.availability === avail;
+        return matchSpec && matchExp && matchAvail;
+      });
+
+      const grid = document.getElementById('doctors-grid');
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center text-sm text-darkbrown-muted">No specialists match your selected filters. Try broadening your criteria!</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(d => `
+        <div class="card-hover bg-white rounded-[26px] border border-peach/60 p-6 shadow-sm flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex items-center gap-4">
+              <img src="${d.photo}" onerror="this.src='https://placehold.co/150x150/C8E6D0/49352E?text=Doctor'" alt="${d.name}" class="w-20 h-20 rounded-2xl object-cover border-2 border-mint shadow" />
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-mint/70 text-[11px] font-bold text-emerald-900">${d.availability}</span>
+                <h3 class="font-heading font-bold text-lg text-darkbrown mt-1">${d.name}</h3>
+                <p class="text-xs font-semibold text-softorange">${d.role}</p>
+              </div>
+            </div>
+            <div class="bg-cream p-3.5 rounded-2xl space-y-1.5 text-xs">
+              <p><i class="fa-solid fa-graduation-cap text-softorange w-5"></i> <strong>Qualification:</strong> ${d.qual}</p>
+              <p><i class="fa-solid fa-briefcase-medical text-softorange w-5"></i> <strong>Experience:</strong> ${d.exp} Years • ${d.spec}</p>
+              <p><i class="fa-regular fa-clock text-softorange w-5"></i> <strong>Timings:</strong> ${d.timings}</p>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-peach/40 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-amber-500">★ ${d.rating} <span class="text-darkbrown-muted font-normal">(${d.reviewsCount})</span></p>
+              <p class="font-heading font-bold text-base text-darkbrown">$${d.fee} <span class="text-xs font-normal text-darkbrown-muted">/ session</span></p>
+            </div>
+            <button onclick="bookSpecificService('Veterinary Consultation', '${d.name}')" class="px-4 py-2.5 rounded-xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-xs shadow transition">
+              Book Appointment
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ------------------------------------------------------------
+    // 7. PET HEALTH ARTICLES & SMART FOOD RECOMMENDER
+    // ------------------------------------------------------------
+    const ARTICLE_CATEGORIES = [
+      'All', 'Healthy food habits', 'Vaccination schedules', 'Daily exercise',
+      'Grooming routines', 'Dental hygiene', 'Seasonal pet care',
+      'Common health warning signs', 'Puppy and kitten care', 'Senior pet care'
+    ];
+
+    function renderArticles() {
+      const pills = document.getElementById('article-category-pills');
+      pills.innerHTML = ARTICLE_CATEGORIES.map(cat => {
+        const active = cat === activeArticleCategory;
+        return `<button onclick="activeArticleCategory='${cat}'; renderArticles()" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition ${active ? 'bg-softorange text-white' : 'bg-white border border-peach hover:bg-peach/40'}">${cat}</button>`;
+      }).join('');
+
+      const q = (document.getElementById('article-search')?.value || '').toLowerCase();
+      const filtered = appState.articles.filter(a => {
+        const matchCat = activeArticleCategory === 'All' || a.category === activeArticleCategory;
+        const matchText = a.title.toLowerCase().includes(q) || a.summary.toLowerCase().includes(q) || a.category.toLowerCase().includes(q);
+        return matchCat && matchText;
+      });
+
+      const grid = document.getElementById('articles-grid');
+      grid.innerHTML = filtered.map(a => `
+        <div class="card-hover bg-white rounded-[24px] border border-peach/60 p-6 flex flex-col justify-between shadow-sm">
+          <div>
+            <div class="flex items-center justify-between text-xs mb-3">
+              <span class="px-3 py-1 rounded-full bg-mint/60 font-bold text-emerald-900">${a.category}</span>
+              <span class="text-darkbrown-muted">${a.readTime}</span>
+            </div>
+            <h3 class="font-heading font-bold text-lg text-darkbrown mb-2">${a.title}</h3>
+            <p class="text-xs text-darkbrown-muted leading-relaxed">${a.summary}</p>
+          </div>
+          <button onclick="readFullArticle('${a.id}')" class="mt-4 w-full py-2.5 rounded-xl bg-cream hover:bg-peach/50 border border-peach font-heading font-bold text-xs text-darkbrown transition">
+            Read Full Guide <i class="fa-solid fa-book-open ml-1"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function readFullArticle(id) {
+      const a = appState.articles.find(item => item.id === id);
+      if (!a) return;
+      openModal(`
+        <span class="px-3 py-1 rounded-full bg-mint text-xs font-bold">${a.category}</span>
+        <h3 class="font-heading font-bold text-2xl text-darkbrown mt-3 mb-2">${a.title}</h3>
+        <p class="text-xs text-darkbrown-muted mb-4">${a.readTime} • Reviewed by PawCare Veterinary Board</p>
+        <div class="bg-cream p-5 rounded-2xl border border-peach/50 text-sm text-darkbrown leading-relaxed space-y-3">
+          <p>${a.content}</p>
+          <p class="text-xs text-darkbrown-muted pt-2 border-t border-peach/40"><strong>Need tailored advice?</strong> Book a 1-on-1 wellness consultation with our veterinary team anytime.</p>
+        </div>
+      `);
+    }
+
+    function generateFoodRecommendation() {
+      const species = document.getElementById('food-species').value;
+      const age = document.getElementById('food-age').value;
+      const size = document.getElementById('food-size').value;
+      const diet = document.getElementById('food-diet').value;
+
+      let mealTitle = `${age} ${size}-Breed ${species} (${diet}) Formula`;
+      let proteinSource = diet === 'Chicken-Free' ? 'Wild-Caught Salmon, Duck & Whitefish' : 'Deboned Turkey, Chicken & Omega-3 Fish Oil';
+      if (species === 'Rabbit') proteinSource = '80% First-Cut Timothy Hay + Dark Leafy Romaine & Herbs';
+      if (species === 'Bird') proteinSource = 'Cold-Pressed Organic Avian Pellets + Sprouted Quinoa & Kale';
+
+      const allergyNote = diet === 'Chicken-Free'
+        ? '⚠️ Strict Poultry-Free Alert: Check all treats for hidden chicken meal or poultry by-products.'
+        : '⚠️ Allergy & Special Diet Note: Introduce new diets gradually over 7 days. Always consult a PawCare vet for kidney, diabetic, or prescription diets.';
+
+      document.getElementById('food-recommendation-output').innerHTML = `
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <span class="px-2.5 py-0.5 rounded-full bg-peach text-xs font-bold">Recommended Nutrition Match</span>
+            <h4 class="font-heading font-bold text-lg text-darkbrown">${mealTitle}</h4>
+            <p class="text-xs text-darkbrown-muted"><strong>Primary Ingredients:</strong> ${proteinSource}</p>
+            <p class="text-xs text-amber-800 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200 mt-2">${allergyNote}</p>
+          </div>
+          <button onclick="navigateTo('shop')" class="shrink-0 px-5 py-3 rounded-2xl bg-mint hover:bg-mint-dark text-darkbrown font-heading font-bold text-xs shadow-xs">
+            Shop Recommended Food 🛍️
+          </button>
+        </div>
+      `;
+    }
+
+    // ------------------------------------------------------------
+    // 8. ADOPTION CORNER & LOST/FOUND BOARD
+    // ------------------------------------------------------------
+    function switchRescueTab(tab) {
+      const isAdopt = tab === 'adopt';
+      document.getElementById('rescue-adopt-panel').classList.toggle('hidden', !isAdopt);
+      document.getElementById('rescue-lost-panel').classList.toggle('hidden', isAdopt);
+      document.getElementById('tab-btn-adopt').className = isAdopt ? 'px-4 py-2 rounded-xl bg-peach font-bold text-sm text-darkbrown transition' : 'px-4 py-2 rounded-xl font-bold text-sm text-darkbrown-muted transition';
+      document.getElementById('tab-btn-lost').className = !isAdopt ? 'px-4 py-2 rounded-xl bg-peach font-bold text-sm text-darkbrown transition' : 'px-4 py-2 rounded-xl font-bold text-sm text-darkbrown-muted transition';
+    }
+
+    function filterAdoptions(species) {
+      activeAdoptionFilter = species;
+      renderAdoptions();
+    }
+
+    function renderAdoptions() {
+      const list = activeAdoptionFilter === 'All'
+        ? appState.adoptions
+        : appState.adoptions.filter(a => a.species === activeAdoptionFilter);
+
+      document.getElementById('adoption-grid').innerHTML = list.map(pet => `
+        <div class="card-hover bg-white rounded-[26px] border border-peach/60 overflow-hidden shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="relative h-56 overflow-hidden">
+              <img src="${pet.photo}" onerror="this.src='https://placehold.co/500x360/FFCBA4/49352E?text=${pet.name}'" alt="${pet.name}" class="w-full h-full object-cover" />
+              <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 font-heading font-bold text-xs text-darkbrown shadow">${pet.species} • ${pet.age}</span>
+            </div>
+            <div class="p-6 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <h3 class="font-heading font-bold text-2xl text-darkbrown">${pet.name}</h3>
+                <span class="text-xs font-bold text-softorange">${pet.breed}</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
+                <span class="px-2.5 py-0.5 rounded-full bg-mint/70 text-emerald-900">✓ Vaccinated</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-peach/60 text-darkbrown">${pet.gender}</span>
+              </div>
+              <p class="text-xs text-darkbrown-muted leading-relaxed">${pet.bio}</p>
+            </div>
+          </div>
+          <div class="px-6 pb-6">
+            <button onclick="openAdoptionForm('${pet.name}')" class="w-full py-3 rounded-2xl bg-softorange hover:bg-softorange-hover text-white font-heading font-bold text-sm shadow transition">
+              Apply to Adopt ${pet.name} ❤️
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAdoptionForm(petName) {
+      openModal(`
+        <h3 class="font-heading font-bold text-2xl text-darkbrown mb-1">Adoption Application for ${petName} 🏡</h3>
+        <p class="text-xs text-darkbrown-muted mb-4">Our adoption counselor will review your home match within 24 hours.</p>
+        <form onsubmit="submitAdoptionApplication(event, '${petName}')" class="space-y-3.5">
+          <input type="text" required placeholder="Your Full Name" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          <input type="text" required placeholder="Phone & Email Address" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          <select class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-semibold">
+            <option>Home Type: House with Fenced Yard</option>
+            <option>Home Type: Apartment / Condo</option>
+          </select>
+          <textarea required rows="3" placeholder="Tell us about your daily routine & experience with pets..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm"></textarea>
+          <button type="submit" class="w-full py-3 rounded-2xl bg-softorange text-white font-heading font-bold text-sm shadow">Submit Adoption Application</button>
+        </form>
+      `);
+    }
+
+    function submitAdoptionApplication(e, petName) {
+      e.preventDefault();
+      closeModal();
+      showToast(`Adoption application for ${petName} received! Our shelter team will call you soon.`);
+    }
+
+    function renderLostFound() {
+      document.getElementById('lost-found-grid').innerHTML = appState.lostFound.map(item => `
+        <div class="bg-white rounded-[24px] border-2 ${item.type === 'LOST' ? 'border-red-300' : 'border-emerald-300'} overflow-hidden shadow-sm">
+          <div class="relative h-48">
+            <img src="${item.photo}" onerror="this.src='https://placehold.co/500x300/FFCBA4/49352E?text=Pet+Alert'" class="w-full h-full object-cover" />
+            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white ${item.type === 'LOST' ? 'bg-red-500' : 'bg-emerald-600'}">${item.type} PET ALERT</span>
+          </div>
+          <div class="p-5 space-y-2">
+            <div class="flex justify-between items-center">
+              <h3 class="font-heading font-bold text-lg">${item.name} (${item.species})</h3>
+              <span class="text-[11px] text-darkbrown-muted">${item.date}</span>
+            </div>
+            <p class="text-xs font-bold text-softorange"><i class="fa-solid fa-location-dot mr-1"></i> ${item.location}</p>
+            <p class="text-xs text-darkbrown-muted">${item.desc}</p>
+            <div class="pt-2 border-t border-peach/40 flex items-center justify-between text-xs font-bold">
+              <span>Contact: ${item.contact}</span>
+              <button onclick="showToast('Alert shared with local PawCare neighborhood network!')" class="px-3 py-1.5 rounded-xl bg-peach/70 hover:bg-peach">Share Alert</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openLostFoundModal() {
+      openModal(`
+        <h3 class="font-heading font-bold text-2xl text-darkbrown mb-3">Post Lost or Found Pet Alert 📢</h3>
+        <form onsubmit="submitLostFoundAlert(event)" class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <select id="lf-type" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm font-bold">
+              <option value="LOST">🚨 LOST PET</option>
+              <option value="FOUND">💚 FOUND PET</option>
+            </select>
+            <input type="text" id="lf-name" required placeholder="Pet Name (or Unknown)" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <input type="text" id="lf-species" required placeholder="Species / Breed" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+            <input type="text" id="lf-location" required placeholder="Last Seen Location" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          </div>
+          <input type="text" id="lf-contact" required placeholder="Contact Phone Number" class="w-full px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          <textarea id="lf-desc" required rows="2" placeholder="Collar color, markings, temperament..." class="w-full px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm"></textarea>
+          <button type="submit" class="w-full py-3 rounded-2xl bg-softorange text-white font-heading font-bold text-sm">Publish Alert Now</button>
+        </form>
+      `);
+    }
+
+    function submitLostFoundAlert(e) {
+      e.preventDefault();
+      appState.lostFound.unshift({
+        id: 'lf-' + Date.now(),
+        type: document.getElementById('lf-type').value,
+        name: document.getElementById('lf-name').value,
+        species: document.getElementById('lf-species').value,
+        location: document.getElementById('lf-location').value,
+        date: 'Just now',
+        contact: document.getElementById('lf-contact').value,
+        desc: document.getElementById('lf-desc').value,
+        photo: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80'
+      });
+      saveState();
+      renderLostFound();
+      closeModal();
+      showToast('Lost & Found alert broadcasted to community!');
+    }
+
+    // ------------------------------------------------------------
+    // 9. PET PRODUCTS SHOPPING & CART DRAWER
+    // ------------------------------------------------------------
+    const SHOP_CATEGORIES = ['All', 'Pet food', 'Toys', 'Collars and leashes', 'Grooming products', 'Beds and blankets', 'Medicines and care supplies'];
+
+    function renderShopProducts() {
+      const catBar = document.getElementById('shop-category-bar');
+      catBar.innerHTML = SHOP_CATEGORIES.map(c => {
+        const active = c === activeShopCategory;
+        return `<button onclick="activeShopCategory='${c}'; renderShopProducts()" class="px-4 py-2 rounded-full text-xs font-bold transition ${active ? 'bg-softorange text-white' : 'bg-white border border-peach hover:bg-peach/40'}">${c}</button>`;
+      }).join('');
+
+      const query = (document.getElementById('shop-search')?.value || '').toLowerCase();
+      const sort = document.getElementById('shop-sort')?.value || 'featured';
+
+      let list = appState.products.filter(p => {
+        const matchCat = activeShopCategory === 'All' || p.category === activeShopCategory;
+        const matchQ = p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query);
+        return matchCat && matchQ;
+      });
+
+      if (sort === 'price-asc') list = [...list].sort((a, b) => a.price - b.price);
+      if (sort === 'price-desc') list = [...list].sort((a, b) => b.price - a.price);
+
+      document.getElementById('shop-products-grid').innerHTML = list.map(p => `
+        <div class="card-hover bg-white rounded-[24px] border border-peach/60 overflow-hidden flex flex-col justify-between shadow-sm">
+          <div>
+            <div class="relative h-48 overflow-hidden bg-cream">
+              <img src="${p.image}" onerror="this.src='https://placehold.co/400x300/C8E6D0/49352E?text=PawCare+Product'" alt="${p.name}" class="w-full h-full object-cover" />
+              <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 text-[11px] font-bold text-darkbrown">${p.category}</span>
+            </div>
+            <div class="p-5">
+              <div class="flex items-center justify-between text-xs text-amber-500 font-bold mb-1">
+                <span>★ ${p.rating}</span>
+                <span class="font-heading text-lg text-softorange">$${p.price.toFixed(2)}</span>
+              </div>
+              <h3 class="font-heading font-bold text-base text-darkbrown leading-snug">${p.name}</h3>
+              <p class="text-xs text-darkbrown-muted mt-1.5">${p.desc}</p>
+            </div>
+          </div>
+          <div class="px-5 pb-5">
+            <button onclick="addToCart('${p.id}')" class="w-full py-2.5 rounded-xl bg-mint hover:bg-mint-dark text-darkbrown font-heading font-bold text-xs transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-cart-plus"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(productId) {
+      const existing = appState.cart.find(c => c.productId === productId);
+      if (existing) existing.qty += 1;
+      else appState.cart.push({ productId, qty: 1 });
+      saveState();
+      updateCartUI();
+      showToast('Added item to your PawCare shopping bag!');
+    }
+
+    function updateCartQty(productId, delta) {
+      const idx = appState.cart.findIndex(c => c.productId === productId);
+      if (idx === -1) return;
+      appState.cart[idx].qty += delta;
+      if (appState.cart[idx].qty <= 0) appState.cart.splice(idx, 1);
+      saveState();
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalCount = appState.cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('cart-badge').textContent = totalCount;
+
+      const listEl = document.getElementById('cart-items-list');
+      let subtotal = 0;
+
+      if (appState.cart.length === 0) {
+        listEl.innerHTML = `<div class="text-center py-12 text-sm text-darkbrown-muted">Your cart is empty. Explore vet-approved goodies in the Shop! 🦴</div>`;
+      } else {
+        listEl.innerHTML = appState.cart.map(item => {
+          const p = appState.products.find(prod => prod.id === item.productId);
+          if (!p) return '';
+          subtotal += p.price * item.qty;
+          return `
+            <div class="bg-white p-3.5 rounded-2xl border border-peach/60 flex items-center gap-3">
+              <img src="${p.image}" class="w-14 h-14 rounded-xl object-cover shrink-0" />
+              <div class="flex-1 min-w-0">
+                <p class="font-heading font-bold text-xs text-darkbrown truncate">${p.name}</p>
+                <p class="text-xs font-bold text-softorange mt-0.5">$${(p.price * item.qty).toFixed(2)}</p>
+              </div>
+              <div class="flex items-center gap-1.5 bg-cream px-2 py-1 rounded-xl border border-peach">
+                <button onclick="updateCartQty('${p.id}', -1)" class="w-6 h-6 font-bold text-xs">-</button>
+                <span class="text-xs font-bold px-1">${item.qty}</span>
+                <button onclick="updateCartQty('${p.id}', 1)" class="w-6 h-6 font-bold text-xs">+</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      const tax = subtotal * 0.08;
+      const total = subtotal + tax;
+      document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cart-tax').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function toggleCartDrawer(open) {
+      document.getElementById('cart-drawer').classList.toggle('hidden', !open);
+      if (open) updateCartUI();
+    }
+
+    function checkoutCart() {
+      if (appState.cart.length === 0) {
+        showToast('Your cart is empty!', 'error');
+        return;
+      }
+      const summary = appState.cart.map(c => {
+        const p = appState.products.find(prod => prod.id === c.productId);
+        return p ? `${p.name} (x${c.qty})` : '';
+      }).join(', ');
+      const totalStr = document.getElementById('cart-total').textContent;
+
+      appState.orders.unshift({
+        id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+        date: new Date().toISOString().split('T')[0],
+        items: summary,
+        total: totalStr,
+        status: 'Processing'
+      });
+      appState.cart = [];
+      saveState();
+      updateCartUI();
+      toggleCartDrawer(false);
+      showToast('Order placed! Track it inside My Pets Dashboard 🎉');
+    }
+
+    // ------------------------------------------------------------
+    // 10. PET COMMUNITY FEED
+    // ------------------------------------------------------------
+    function renderCommunityFeed() {
+      document.getElementById('community-feed-list').innerHTML = appState.communityPosts.map(post => `
+        <div class="bg-white rounded-[26px] border border-peach/60 p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-mint flex items-center justify-center font-bold text-darkbrown">🐾</div>
+              <div>
+                <p class="font-heading font-bold text-sm text-darkbrown">${post.author}</p>
+                <p class="text-[11px] text-darkbrown-muted">${post.time}</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-peach/50 text-xs font-bold">${post.tag}</span>
+          </div>
+          <p class="text-sm text-darkbrown leading-relaxed">${post.content}</p>
+          ${post.photo ? `<img src="${post.photo}" class="w-full max-h-80 object-cover rounded-2xl border border-peach/40" />` : ''}
+          <div class="flex items-center gap-4 pt-2 border-t border-peach/30">
+            <button onclick="likeCommunityPost('${post.id}')" class="px-3.5 py-1.5 rounded-xl bg-peach/40 hover:bg-peach text-xs font-bold flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-heart text-softorange"></i> ${post.likes} Paw Likes
+            </button>
+            <span class="text-xs text-darkbrown-muted">${post.comments.length} Comments</span>
+          </div>
+          <div class="bg-cream p-3.5 rounded-2xl space-y-2">
+            ${post.comments.map(c => `<p class="text-xs text-darkbrown">💬 ${c}</p>`).join('')}
+            <form onsubmit="addCommunityComment(event, '${post.id}')" class="flex gap-2 pt-1">
+              <input type="text" required placeholder="Write a kind comment..." class="flex-1 px-3 py-1.5 rounded-xl bg-white border border-peach text-xs" />
+              <button type="submit" class="px-3 py-1.5 rounded-xl bg-darkbrown text-white text-xs font-bold">Reply</button>
+            </form>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function createCommunityPost(e) {
+      e.preventDefault();
+      appState.communityPosts.unshift({
+        id: 'pst-' + Date.now(),
+        author: document.getElementById('post-author').value,
+        tag: document.getElementById('post-tag').value,
+        time: 'Just now',
+        content: document.getElementById('post-content').value,
+        photo: document.getElementById('post-photo-preset').value,
+        likes: 1,
+        comments: []
+      });
+      document.getElementById('post-content').value = '';
+      saveState();
+      renderCommunityFeed();
+      showToast('Post shared with the PawCare community!');
+    }
+
+    function likeCommunityPost(postId) {
+      const p = appState.communityPosts.find(item => item.id === postId);
+      if (p) { p.likes += 1; saveState(); renderCommunityFeed(); }
+    }
+
+    function addCommunityComment(e, postId) {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const p = appState.communityPosts.find(item => item.id === postId);
+      if (p && input.value.trim()) {
+        p.comments.push(input.value.trim());
+        saveState();
+        renderCommunityFeed();
+      }
+    }
+
+    // ------------------------------------------------------------
+    // 11. USER DASHBOARD (SMART PROFILES, CHARTS, TRACKERS, VAULT)
+    // ------------------------------------------------------------
+    function getActivePet() {
+      return appState.pets.find(p => p.id === appState.activePetId) || appState.pets[0];
+    }
+
+    function selectActivePet(petId) {
+      appState.activePetId = petId;
+      saveState();
+      renderUserDashboard();
+    }
+
+    function renderUserDashboard() {
+      const pet = getActivePet();
+      const selector = document.getElementById('dashboard-pet-selector');
+      selector.innerHTML = appState.pets.map(p => `<option value="${p.id}" ${p.id === pet.id ? 'selected' : ''}>🐾 ${p.name} (${p.breed})</option>`).join('');
+
+      // Notifications Strip
+      document.getElementById('dashboard-notifications').innerHTML = `
+        <div class="bg-white/95 p-3.5 rounded-2xl border border-amber-300 flex items-center gap-3 text-xs">
+          <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0"><i class="fa-solid fa-syringe"></i></span>
+          <div><p class="font-bold">Vaccine / Deworming Alert</p><p class="text-darkbrown-muted">${pet.vaccines[0]?.name || 'All clear'} (${pet.vaccines[0]?.status || ''})</p></div>
+        </div>
+        <div class="bg-white/95 p-3.5 rounded-2xl border border-mint flex items-center gap-3 text-xs">
+          <span class="w-8 h-8 rounded-xl bg-mint text-emerald-800 flex items-center justify-center shrink-0"><i class="fa-solid fa-scissors"></i></span>
+          <div><p class="font-bold">Next Spa Grooming</p><p class="text-darkbrown-muted">${pet.groomingSchedules[0]?.nextDate || 'Not scheduled'}</p></div>
+        </div>
+        <div class="bg-white/95 p-3.5 rounded-2xl border border-peach flex items-center gap-3 text-xs">
+          <span class="w-8 h-8 rounded-xl bg-peach text-darkbrown flex items-center justify-center shrink-0"><i class="fa-solid fa-calendar-check"></i></span>
+          <div><p class="font-bold">Active Bookings</p><p class="text-darkbrown-muted">${appState.appointments.length} Scheduled Visit(s)</p></div>
+        </div>
+      `;
+
+      // Active Pet Profile Card
+      document.getElementById('active-pet-profile-card').innerHTML = `
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="flex items-center gap-5">
+            <img src="${pet.avatar}" onerror="this.src='https://placehold.co/160x160/FFCBA4/49352E?text=${pet.name}'" class="w-24 h-24 rounded-[24px] object-cover border-4 border-peach shadow" />
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="font-heading font-bold text-2xl sm:text-3xl text-darkbrown">${pet.name}</h2>
+                <span class="px-3 py-0.5 rounded-full bg-mint text-xs font-bold">${pet.species}</span>
+              </div>
+              <p class="text-sm font-semibold text-softorange">${pet.breed} • ${pet.age} • ${pet.weight} kg</p>
+              <p class="text-xs text-darkbrown-muted mt-1"><strong>Allergies:</strong> ${pet.allergies}</p>
+            </div>
+          </div>
+          <div class="bg-cream p-4 rounded-2xl border border-peach/60 max-w-md text-xs space-y-1">
+            <p class="font-heading font-bold text-sm text-darkbrown">🩺 Medical Summary</p>
+            <p class="text-darkbrown-muted leading-relaxed">${pet.medicalHistory}</p>
+          </div>
+        </div>
+      `;
+
+      // Render Growth Chart
+      renderGrowthChart(pet);
+
+      // Render Activity Bars
+      const act = pet.activity;
+      const metrics = [
+        { key: 'walkMins', goalKey: 'walkGoal', label: 'Daily Walk', unit: 'mins', icon: '🦮', color: 'bg-softorange' },
+        { key: 'playMins', goalKey: 'playGoal', label: 'Active Play', unit: 'mins', icon: '🎾', color: 'bg-emerald-500' },
+        { key: 'sleepHours', goalKey: 'sleepGoal', label: 'Restful Sleep', unit: 'hrs', icon: '😴', color: 'bg-indigo-400' },
+        { key: 'waterBowls', goalKey: 'waterGoal', label: 'Fresh Water Bowls', unit: 'bowls', icon: '💧', color: 'bg-sky-500' }
+      ];
+      document.getElementById('activity-tracker-bars').innerHTML = metrics.map(m => {
+        const pct = Math.min(100, Math.round((act[m.key] / act[m.goalKey]) * 100));
+        return `
+          <div>
+            <div class="flex justify-between text-xs font-bold mb-1">
+              <span>${m.icon} ${m.label}: ${act[m.key]} / ${act[m.goalKey]} ${m.unit}</span>
+              <button onclick="incrementActivity('${m.key}', ${m.key === 'walkMins' || m.key === 'playMins' ? 10 : 1})" class="px-2 py-0.5 rounded-lg bg-peach/60 hover:bg-peach text-[11px]">+ Log</button>
+            </div>
+            <div class="w-full h-3 rounded-full bg-cream overflow-hidden border border-peach/40">
+              <div class="${m.color} h-full rounded-full transition-all duration-300" style="width:${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Vaccine Reminders
+      document.getElementById('vaccine-reminders-list').innerHTML = pet.vaccines.map((v, idx) => `
+        <div class="p-3.5 rounded-2xl bg-cream border border-peach/60 flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold text-darkbrown">${v.name}</p>
+            <p class="text-darkbrown-muted">Scheduled: ${v.dueDate}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full font-bold ${v.status.includes('Due') ? 'bg-amber-200 text-amber-900' : 'bg-mint text-emerald-900'}">${v.status}</span>
+            <button onclick="markVaccineDone(${idx})" class="px-2.5 py-1 rounded-xl bg-white border border-peach font-bold hover:bg-mint">✓</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Grooming Schedules
+      document.getElementById('grooming-schedules-list').innerHTML = pet.groomingSchedules.map(g => `
+        <div class="p-3 rounded-2xl bg-mint-light/60 border border-mint flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold">${g.pkg}</p>
+            <p class="text-darkbrown-muted">Every ${g.freqDays} days • Next: <strong>${g.nextDate}</strong></p>
+          </div>
+          <span class="text-emerald-700 font-bold"><i class="fa-solid fa-bell"></i> Active</span>
+        </div>
+      `).join('');
+
+      // Medical Records Vault
+      document.getElementById('medical-records-list').innerHTML = pet.medicalRecords.map(r => `
+        <div class="p-3 rounded-2xl bg-cream border border-peach/60 flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold text-darkbrown"><i class="fa-solid fa-file-medical text-softorange mr-1.5"></i>${r.title}</p>
+            <p class="text-darkbrown-muted">${r.date} • ${r.vet}</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-lg bg-white border border-peach font-semibold">${r.type}</span>
+        </div>
+      `).join('');
+
+      // Appointments & Orders
+      const aptHtml = appState.appointments.map(a => `
+        <div class="p-3 rounded-2xl bg-peach-light/40 border border-peach flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold">${a.service} (${a.petName})</p>
+            <p class="text-darkbrown-muted">${a.date} @ ${a.slot} • ${a.doctor}</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white font-bold">${a.status}</span>
+        </div>
+      `).join('');
+      const ordHtml = appState.orders.map(o => `
+        <div class="p-3 rounded-2xl bg-mint-light/40 border border-mint flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold">Order ${o.id} • ${o.total}</p>
+            <p class="text-darkbrown-muted line-clamp-1">${o.items}</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-darkbrown text-white font-bold">${o.status}</span>
+        </div>
+      `).join('');
+      document.getElementById('user-appointments-orders').innerHTML = aptHtml + ordHtml;
+    }
+
+    function renderGrowthChart(pet) {
+      const ctx = document.getElementById('growthChartCanvas');
+      if (!ctx) return;
+      if (growthChartInstance) growthChartInstance.destroy();
+      growthChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: pet.growthHistory.map(g => g.label),
+          datasets: [{
+            label: `${pet.name}'s Weight (kg)`,
+            data: pet.growthHistory.map(g => g.weight),
+            borderColor: '#FF9B71',
+            backgroundColor: 'rgba(255, 203, 164, 0.35)',
+            borderWidth: 3,
+            pointBackgroundColor: '#49352E',
+            pointRadius: 5,
+            fill: true,
+            tension: 0.35
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: false } }
+        }
+      });
+    }
+
+    function logPetGrowth(e) {
+      e.preventDefault();
+      const val = parseFloat(document.getElementById('growth-weight-input').value);
+      if (!val || val <= 0) return;
+      const pet = getActivePet();
+      pet.weight = val;
+      pet.growthHistory.push({ label: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), weight: val });
+      document.getElementById('growth-weight-input').value = '';
+      saveState();
+      renderUserDashboard();
+      showToast(`Logged ${val} kg for ${pet.name}!`);
+    }
+
+    function incrementActivity(key, step) {
+      const pet = getActivePet();
+      pet.activity[key] += step;
+      saveState();
+      renderUserDashboard();
+    }
+
+    function resetDailyActivity() {
+      const pet = getActivePet();
+      pet.activity.walkMins = 0; pet.activity.playMins = 0; pet.activity.sleepHours = 0; pet.activity.waterBowls = 0;
+      saveState();
+      renderUserDashboard();
+      showToast('Daily activity counters reset for a fresh day!');
+    }
+
+    function markVaccineDone(idx) {
+      const pet = getActivePet();
+      pet.vaccines[idx].status = 'Up to Date';
+      saveState();
+      renderUserDashboard();
+      showToast('Vaccination status updated to Up to Date!');
+    }
+
+    function addVaccineReminderPrompt() {
+      const pet = getActivePet();
+      pet.vaccines.push({ name: 'Annual Bordetella Booster', dueDate: '2027-02-14', status: 'Scheduled' });
+      saveState();
+      renderUserDashboard();
+      showToast('Added Bordetella booster reminder!');
+    }
+
+    function scheduleRecurringGrooming(e) {
+      e.preventDefault();
+      const pet = getActivePet();
+      const pkg = document.getElementById('groom-package').value;
+      const freq = parseInt(document.getElementById('groom-frequency').value, 10);
+      const next = new Date(Date.now() + freq * 86400000).toISOString().split('T')[0];
+      pet.groomingSchedules.unshift({ id: 'grm-' + Date.now(), pkg, freqDays: freq, nextDate: next });
+      saveState();
+      renderUserDashboard();
+      showToast(`Recurring ${pkg} scheduled! Next visit: ${next}`);
+    }
+
+    function addMedicalRecordMock() {
+      const pet = getActivePet();
+      pet.medicalRecords.unshift({
+        id: 'rec-' + Date.now(),
+        title: 'Digital Prescription & Wellness Note',
+        date: new Date().toISOString().split('T')[0],
+        vet: 'Dr. Clara Bennett, DVM',
+        type: 'Prescription'
+      });
+      saveState();
+      renderUserDashboard();
+      showToast('Encrypted medical record added to vault.');
+    }
+
+    function openAddPetModal() {
+      openModal(`
+        <h3 class="font-heading font-bold text-2xl text-darkbrown mb-3">Create Smart Pet Health Profile 🐾</h3>
+        <form onsubmit="submitNewPetProfile(event)" class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <input type="text" id="new-pet-name" required placeholder="Pet Name" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+            <select id="new-pet-species" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm font-semibold">
+              <option value="Dog">Dog</option><option value="Cat">Cat</option><option value="Bird">Bird</option><option value="Rabbit">Rabbit</option><option value="Hamster">Hamster</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <input type="text" id="new-pet-breed" required placeholder="Breed" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+            <input type="text" id="new-pet-age" required placeholder="Age (e.g. 1 yr)" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+            <input type="number" step="0.1" id="new-pet-weight" required placeholder="Weight (kg)" class="px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          </div>
+          <input type="text" id="new-pet-allergies" placeholder="Known Allergies (or None)" class="w-full px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+          <textarea id="new-pet-history" rows="2" placeholder="Medical history notes..." class="w-full px-3.5 py-2.5 rounded-xl bg-cream border border-peach text-sm"></textarea>
+          <button type="submit" class="w-full py-3 rounded-2xl bg-softorange text-white font-heading font-bold text-sm">Save Smart Profile</button>
+        </form>
+      `);
+    }
+
+    function submitNewPetProfile(e) {
+      e.preventDefault();
+      const w = parseFloat(document.getElementById('new-pet-weight').value) || 5;
+      const newPet = {
+        id: 'pet-' + Date.now(),
+        name: document.getElementById('new-pet-name').value,
+        species: document.getElementById('new-pet-species').value,
+        breed: document.getElementById('new-pet-breed').value,
+        age: document.getElementById('new-pet-age').value,
+        weight: w,
+        avatar: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80',
+        allergies: document.getElementById('new-pet-allergies').value || 'None known',
+        medicalHistory: document.getElementById('new-pet-history').value || 'Healthy baseline registered.',
+        growthHistory: [{ label: 'Start', weight: w }],
+        vaccines: [{ name: 'Initial Wellness & Core Booster', dueDate: '2026-12-20', status: 'Scheduled' }],
+        groomingSchedules: [{ id: 'grm-' + Date.now(), pkg: 'Bath & Nail Trim', freqDays: 30, nextDate: '2026-12-18' }],
+        medicalRecords: [{ id: 'rec-' + Date.now(), title: 'Onboarding Health Profile Created', date: new Date().toISOString().split('T')[0], vet: 'PawCare Digital Vault', type: 'Profile' }],
+        activity: { walkMins: 20, walkGoal: 45, playMins: 15, playGoal: 30, sleepHours: 12, sleepGoal: 14, waterBowls: 2, waterGoal: 3 }
+      };
+      appState.pets.push(newPet);
+      appState.activePetId = newPet.id;
+      saveState();
+      closeModal();
+      renderUserDashboard();
+      showToast(`Created Smart Health Profile for ${newPet.name}!`);
+    }
+
+    // ------------------------------------------------------------
+    // 12. ADMIN MANAGEMENT CONSOLE
+    // ------------------------------------------------------------
+    function switchAdminTab(tab) {
+      activeAdminTab = tab;
+      renderAdminConsole();
+    }
+
+    function renderAdminConsole() {
+      document.getElementById('admin-stat-apts').textContent = appState.appointments.length;
+      document.getElementById('admin-stat-orders').textContent = appState.orders.length;
+      document.getElementById('admin-stat-pets').textContent = appState.adoptions.length;
+
+      const panel = document.getElementById('admin-panel-content');
+      if (activeAdminTab === 'bookings') {
+        panel.innerHTML = `
+          <h3 class="font-heading font-bold text-xl mb-4">Manage Appointment Requests</h3>
+          <div class="space-y-3">
+            ${appState.appointments.map((a, idx) => `
+              <div class="p-4 rounded-2xl bg-cream border border-peach flex flex-wrap items-center justify-between gap-4 text-xs">
+                <div>
+                  <p class="font-bold text-sm">${a.id} • ${a.petName} (${a.petType}) — ${a.service}</p>
+                  <p class="text-darkbrown-muted">Doctor: ${a.doctor} | ${a.date} at ${a.slot} | Owner: ${a.ownerName} (${a.ownerContact})</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="px-3 py-1 rounded-full bg-mint font-bold">${a.status}</span>
+                  <button onclick="adminUpdateAptStatus(${idx}, 'Completed')" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-bold">Complete</button>
+                  <button onclick="adminUpdateAptStatus(${idx}, 'Cancelled')" class="px-3 py-1.5 rounded-xl bg-red-500 text-white font-bold">Cancel</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (activeAdminTab === 'services') {
+        panel.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="font-heading font-bold text-xl">Manage Veterinary & Spa Services (${appState.services.length})</h3>
+            <form onsubmit="adminAddService(event)" class="flex flex-wrap gap-2">
+              <input type="text" id="adm-srv-title" required placeholder="Service Title" class="px-3 py-2 rounded-xl bg-cream border border-peach text-xs" />
+              <input type="number" id="adm-srv-price" required placeholder="Price ($)" class="w-24 px-3 py-2 rounded-xl bg-cream border border-peach text-xs" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-softorange text-white text-xs font-bold">+ Add Service</button>
+            </form>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            ${appState.services.map((s, idx) => `
+              <div class="p-3.5 rounded-2xl bg-cream border border-peach flex items-center justify-between text-xs">
+                <div><p class="font-bold">${s.title}</p><p class="text-softorange font-bold">$${s.price} • ${s.duration}</p></div>
+                <button onclick="adminDeleteService(${idx})" class="text-red-500 hover:underline font-bold">Remove</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (activeAdminTab === 'doctors') {
+        panel.innerHTML = `
+          <h3 class="font-heading font-bold text-xl mb-4">Veterinarians & Trainers Roster</h3>
+          <div class="grid sm:grid-cols-2 gap-3">
+            ${appState.doctors.map(d => `
+              <div class="p-4 rounded-2xl bg-cream border border-mint flex items-center justify-between text-xs">
+                <div><p class="font-bold text-sm">${d.name}</p><p class="text-darkbrown-muted">${d.spec} • $${d.fee}/visit</p></div>
+                <span class="px-2.5 py-1 rounded-full bg-mint font-bold">${d.availability}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (activeAdminTab === 'adoptions') {
+        panel.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="font-heading font-bold text-xl">Adoption Listings (${appState.adoptions.length})</h3>
+            <form onsubmit="adminAddAdoption(event)" class="flex flex-wrap gap-2">
+              <input type="text" id="adm-adp-name" required placeholder="Pet Name" class="px-3 py-2 rounded-xl bg-cream border border-peach text-xs" />
+              <input type="text" id="adm-adp-species" required placeholder="Species (Dog/Cat)" class="px-3 py-2 rounded-xl bg-cream border border-peach text-xs" />
+              <input type="text" id="adm-adp-breed" required placeholder="Breed" class="px-3 py-2 rounded-xl bg-cream border border-peach text-xs" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-softorange text-white text-xs font-bold">+ Add Pet</button>
+            </form>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            ${appState.adoptions.map((a, idx) => `
+              <div class="p-3.5 rounded-2xl bg-cream border border-peach flex items-center justify-between text-xs">
+                <div><p class="font-bold">${a.name} (${a.species})</p><p class="text-darkbrown-muted">${a.breed} • ${a.age}</p></div>
+                <button onclick="appState.adoptions.splice(${idx},1); saveState(); renderAdminConsole();" class="text-red-500 font-bold">Mark Adopted</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (activeAdminTab === 'shop') {
+        panel.innerHTML = `
+          <h3 class="font-heading font-bold text-xl mb-4">Customer Shop Orders & Inventory</h3>
+          <div class="space-y-3">
+            ${appState.orders.map(o => `
+              <div class="p-4 rounded-2xl bg-cream border border-mint flex justify-between items-center text-xs">
+                <div><p class="font-bold">${o.id} (${o.date}) — ${o.total}</p><p class="text-darkbrown-muted">${o.items}</p></div>
+                <span class="px-3 py-1 rounded-full bg-darkbrown text-white font-bold">${o.status}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (activeAdminTab === 'articles') {
+        panel.innerHTML = `
+          <h3 class="font-heading font-bold text-xl mb-4">Publish New Pet Care Article</h3>
+          <form onsubmit="adminPublishArticle(event)" class="space-y-3 max-w-xl">
+            <input type="text" id="adm-art-title" required placeholder="Article Headline" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm" />
+            <select id="adm-art-cat" class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm font-semibold">
+              ${ARTICLE_CATEGORIES.slice(1).map(c => `<option value="${c}">${c}</option>`).join('')}
+            </select>
+            <textarea id="adm-art-content" required rows="3" placeholder="Write educational veterinary advice..." class="w-full px-4 py-2.5 rounded-xl bg-cream border border-peach text-sm"></textarea>
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-softorange text-white font-bold text-xs">Publish Article</button>
+          </form>
+        `;
+      } else if (activeAdminTab === 'feedback') {
+        panel.innerHTML = `
+          <h3 class="font-heading font-bold text-xl mb-4">Verified Customer Feedback (${appState.reviews.length})</h3>
+          <div class="space-y-3">
+            ${appState.reviews.map(r => `
+              <div class="p-4 rounded-2xl bg-cream border border-peach text-xs">
+                <p class="font-bold">${r.customer} (${r.petName}) — ${'★'.repeat(r.rating)}</p>
+                <p class="text-darkbrown-muted mt-1">"${r.comment}"</p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function adminUpdateAptStatus(idx, status) {
+      appState.appointments[idx].status = status;
+      saveState();
+      renderAdminConsole();
+      showToast(`Appointment marked as ${status}.`);
+    }
+
+    function adminAddService(e) {
+      e.preventDefault();
+      appState.services.push({
+        id: 'srv-' + Date.now(),
+        title: document.getElementById('adm-srv-title').value,
+        price: parseFloat(document.getElementById('adm-srv-price').value),
+        duration: '40 mins',
+        icon: 'fa-paw',
+        image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80',
+        desc: 'Specialized gentle pet wellness session added by PawCare administration.',
+        includes: ['Certified specialist care', 'Digital visit notes']
+      });
+      saveState();
+      renderAdminConsole();
+      showToast('New service added to catalog!');
+    }
+
+    function adminDeleteService(idx) {
+      appState.services.splice(idx, 1);
+      saveState();
+      renderAdminConsole();
+      showToast('Service removed.');
+    }
+
+    function adminAddAdoption(e) {
+      e.preventDefault();
+      appState.adoptions.unshift({
+        id: 'adp-' + Date.now(),
+        name: document.getElementById('adm-adp-name').value,
+        species: document.getElementById('adm-adp-species').value,
+        breed: document.getElementById('adm-adp-breed').value,
+        age: '1 Year',
+        gender: 'Female',
+        vaccinated: true,
+        neutered: true,
+        bio: 'Sweet rescued companion looking for a loving forever family.',
+        photo: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80'
+      });
+      saveState();
+      renderAdminConsole();
+      showToast('Adoption listing published!');
+    }
+
+    function adminPublishArticle(e) {
+      e.preventDefault();
+      const text = document.getElementById('adm-art-content').value;
+      appState.articles.unshift({
+        id: 'art-' + Date.now(),
+        category: document.getElementById('adm-art-cat').value,
+        title: document.getElementById('adm-art-title').value,
+        readTime: '4 min read',
+        summary: text.slice(0, 110) + '...',
+        content: text
+      });
+      saveState();
+      showToast('Educational article published to Pet Health library!');
+    }
+
+    // ------------------------------------------------------------
+    // 13. EMERGENCY SOS MODAL & CONTACT FORM
+    // ------------------------------------------------------------
+    function openSOSModal() {
+      openModal(`
+        <div class="space-y-5">
+          <div class="flex items-center gap-3 text-red-600">
+            <div class="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center text-2xl"><i class="fa-solid fa-truck-medical"></i></div>
+            <div>
+              <h3 class="font-heading font-bold text-2xl text-darkbrown">Emergency Pet SOS Hub 🚨</h3>
+              <p class="text-xs font-bold text-red-600">24/7 Rapid Veterinary Triage & Trauma Centers</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-red-50 border border-red-200 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="font-heading font-bold text-base text-red-900">PawCare 24/7 Emergency Hotline</p>
+              <p class="text-xs text-red-700">Direct connection to on-duty ER Veterinarian</p>
+            </div>
+            <a href="tel:+18009118387" onclick="showToast('Dialing PawCare 24/7 Emergency ER Vet...')" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-heading font-bold text-sm shadow">
+              <i class="fa-solid fa-phone mr-1.5"></i> Call +1 (800) 911-VETS
+            </a>
+          </div>
+
+          <div class="space-y-2.5">
+            <h4 class="font-heading font-bold text-sm text-darkbrown">Nearby 24-Hour Veterinary Hospitals:</h4>
+            <div class="p-3.5 rounded-2xl bg-cream border border-peach flex items-center justify-between text-xs">
+              <div>
+                <p class="font-bold">PawCare Flagship 24/7 ICU Hospital</p>
+                <p class="text-darkbrown-muted">742 Blossom Meadow Ave • 1.2 km away • Open 24 Hours</p>
+              </div>
+              <button onclick="showToast('GPS route started to PawCare ICU!')" class="px-3 py-1.5 rounded-xl bg-darkbrown text-white font-bold">Navigate</button>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-cream border border-peach flex items-center justify-between text-xs">
+              <div>
+                <p class="font-bold">Greenview Animal Emergency & Trauma Center</p>
+                <p class="text-darkbrown-muted">1180 Cedar Boulevard • 3.4 km away • Open 24 Hours</p>
+              </div>
+              <button onclick="showToast('GPS route started to Greenview ER!')" class="px-3 py-1.5 rounded-xl bg-darkbrown text-white font-bold">Navigate</button>
+            </div>
+          </div>
+
+          <div class="bg-mint-light p-4 rounded-2xl border border-mint text-xs space-y-1">
+            <p class="font-bold text-emerald-900">⚡ Quick First-Aid Reminder While En Route:</p>
+            <p class="text-darkbrown-muted">Keep your pet warm and calm in a carrier/towel. Do NOT administer human painkillers (ibuprofen/acetaminophen are toxic to pets).</p>
+          </div>
+        </div>
+      `);
+    }
+
+    function submitContactForm(e) {
+      e.preventDefault();
+      e.target.reset();
+      showToast('Message received! A PawCare coordinator will reply shortly.');
+    }
+
+    // ------------------------------------------------------------
+    // 14. AI PET CARE ASSISTANT (GEMINI API + SMART FALLBACK)
+    // ------------------------------------------------------------
+    function toggleAIChat(forceState) {
+      const win = document.getElementById('ai-chat-window');
+      if (typeof forceState === 'boolean') {
+        win.classList.toggle('hidden', !forceState);
+      } else {
+        win.classList.toggle('hidden');
+      }
+    }
+
+    function sendQuickAIPrompt(promptText) {
+      document.getElementById('ai-chat-input').value = promptText;
+      handleAIChatSubmit(new Event('submit'));
+    }
+
+    async function handleAIChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('ai-chat-input');
+      const userMsg = input.value.trim();
+      if (!userMsg) return;
+      input.value = '';
+
+      const messagesBox = document.getElementById('ai-chat-messages');
+      messagesBox.innerHTML += `
+        <div class="ml-auto max-w-[85%] bg-softorange text-white p-3 rounded-2xl rounded-tr-none shadow-xs">
+          ${userMsg}
+        </div>
+      `;
+
+      const loadingId = 'ai-loading-' + Date.now();
+      messagesBox.innerHTML += `
+        <div id="${loadingId}" class="max-w-[85%] bg-white p-3 rounded-2xl rounded-tl-none border border-peach/60 text-darkbrown-muted italic">
+          PawBot is thinking... 🐾
+        </div>
+      `;
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+
+      const reply = await fetchPawBotResponse(userMsg);
+      const loader = document.getElementById(loadingId);
+      if (loader) loader.remove();
+
+      messagesBox.innerHTML += `
+        <div class="max-w-[88%] bg-white p-3.5 rounded-2xl rounded-tl-none border border-peach/60 shadow-xs text-darkbrown leading-relaxed">
+          ${reply}
+        </div>
+      `;
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+
+    async function fetchPawBotResponse(userQuery) {
+      const apiKey = "";
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+      const systemPrompt = "You are PawBot, a warm, friendly AI Pet Care Assistant for PawCare Veterinary & Wellness. Answer questions about pet nutrition, grooming, exercise, and general care concisely (3-4 sentences). ALWAYS remind users that you cannot diagnose illnesses and recommend seeing a veterinarian or using PawCare's Emergency SOS for concerning symptoms.";
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: userQuery }] }],
+            systemInstruction: { parts: [{ text: systemPrompt }] }
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) return text.replace(/\n/g, '<br>');
+        }
+      } catch (err) {
+        // Fallback gracefully to built-in veterinary knowledge engine
+      }
+
+      const q = userQuery.toLowerCase();
+      if (q.includes('tooth') || q.includes('teeth') || q.includes('dental')) {
+        return "🦷 Brush your pet's teeth 3–4 times weekly using enzymatic pet toothpaste (never human toothpaste!) and VOHC-approved dental chews. <em>Reminder: I cannot diagnose dental disease—book a PawCare Dental Checkup if you notice red gums or bad breath.</em>";
+      }
+      if (q.includes('toxic') || q.includes('food') || q.includes('eat')) {
+        return "🚫 Keep chocolate, grapes/raisins, onions, garlic, xylitol (sugar-free gum), and macadamia nuts strictly away from pets! Stick to balanced, species-specific meals. <em>If your pet ingested something toxic, please contact a veterinarian or press Emergency SOS immediately.</em>";
+      }
+      if (q.includes('vaccine') || q.includes('vaccination')) {
+        return "💉 Puppies and kittens typically start core vaccines at 6–8 weeks with boosters every 3–4 weeks until 16 weeks, followed by annual wellness visits. <em>I cannot prescribe medical schedules—consult a PawCare vet for a tailored immunization plan.</em>";
+      }
+      return "🐾 Great question! Consistent hydration, daily mental/physical play, regular brushing, and balanced nutrition keep pets thriving. <em>Please note: I provide general care guidance and cannot diagnose medical conditions—if you notice concerning symptoms, please schedule a PawCare Veterinary Consultation.</em>";
+    }
+
+    // ------------------------------------------------------------
+    // 15. INITIALIZE APPLICATION ON LOAD
+    // ------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      renderHomeFeaturedServices();
+      renderPetCategories();
+      renderReviews();
+      updateCartUI();
+    });
+  </script>
+</body>
+</html>
